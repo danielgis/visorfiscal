@@ -174,7 +174,9 @@
         },
         "version": "2.26",
         "id": "widgets_AttributeTable_Widget_13",
-        "name": "AttributeTable"
+        "name": "AttributeTable",
+        "config": "configs/AttributeTable/config_widgets_AttributeTable_Widget_13.json",
+        "visible": false
       },
       {
         "uri": "widgets/Splash/Widget",
