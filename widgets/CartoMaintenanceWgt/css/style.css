@@ -1,0 +1,546 @@
+:root {
+  --blueCm: #0090F8;
+  --grayCm: #D2D2D2;
+  --greenCm: #66BB6A;
+  --orangeCm: #F89500;
+  --cyanCm: #E9F6FF;
+  --redCm: #E96479;
+  --gray2Cm: #ECECEC;
+}
+
+.carto-maintenance-wgt h3 {
+  font-size: 1.2em;
+}
+.carto-maintenance-wgt h3, p {
+  margin-top: 0;
+}
+
+.carto-maintenance-wgt {
+  height: 100%;
+  width: 100%;
+}
+
+.jimu-on-screen-widget-panel>.jimu-panel-title {
+  background-color: var(--blueCm) !important;
+}
+
+.mainCtnCm{
+  width: 100%;
+  height: 100%;
+}
+
+/* ::::::::::::::::::::::::: */
+/* Styles Ctn requests */
+/* ::::::::::::::::::::::::: */
+
+.requestTrayCtnCm{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 15px 12px 12px 12px;
+  display: none;
+}
+
+#searchCtnCm {
+  width: 100%;
+}
+
+.searchTbxClsCm {
+  padding: 0;
+  width: 100%;
+  border: 1px solid var(--grayCm);
+  padding: 5px;
+  border-radius: 5px;
+  outline: none;
+}
+
+.searchCtnClsCm .fa-search { 
+  position: absolute;
+  top: 23px;
+  right: 20px;
+}
+/* .searchCtnClsCm .fa-search {left: 230px;} */
+
+
+#tabFilterCtnCm{
+  border-bottom: 1px solid var(--blueCm);
+  /* margin-top: 20px; */
+}
+
+.tabFilterCtnClsCm button {
+  background-color: inherit;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 20px 10px 10px 10px;
+  /* transition: 0.3s; */
+  /* font-size: 15px; */
+}
+
+.tabFilterCtnClsCm button:hover {
+  /*background-color: #ddd;*/
+  border-bottom: 2px solid var(--blueCm);
+}
+
+.tabFilterCtnClsCm button.active {
+	border-bottom: 2px solid var(--blueCm);
+  font-weight: bold;
+  color: var(--blueCm);
+}
+
+#reportCtnCm{
+  margin-top: 20px;
+  text-align: right;
+}
+
+#btnReportCm{
+  border-radius: 5px;
+  background-color: var(--greenCm);
+  border: none;
+  width: 120px;
+  height: 30px;
+  color: white;
+}
+
+/* Table Tray */
+#tableRequestCtnCm{
+  height: 100%;
+  margin-top: 10px;
+  overflow: auto;
+}
+#tableRequestCm {
+  border-collapse: collapse;
+  width: 100%;
+}
+#tableRequestCm td, #tableRequestCm th {
+  border-bottom: 1px solid #ddd;
+  padding: 5px;
+}
+#tableRequestCm tr:hover {
+  background-color: var(--grayCm);
+}
+
+#tableRequestCm th {
+  font-weight: bold;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  text-align: left;
+  background-color: var(--blueCm);
+  color: white;
+  position: sticky;
+  top: 0;
+}
+.stateRequestClsCm{
+  width: 30px;
+  height: 20px;
+  border: none;
+  border-radius: 3px;
+  color: white;
+  font-size: 10px;
+}
+.stateRequestClsCm :hover{
+  cursor: pointer;
+}
+#editRequestsCm{
+  background-color: var(--redCm);
+}
+#obsRequestsCm{
+  background-color: var(--orangeCm);
+}
+#goodRequestsCm{
+  background-color: var(--greenCm);
+}
+
+.tableRequestCm.scroll tbody {
+  height: 100px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+
+/* #reasignarCm{ */
+  /* height: 100%; */
+  /* display: flex; */
+  /* flex-direction: column; */
+/* } */
+
+.ctnSendDataClsCm{
+  display: flex;
+  height: 100%;
+}
+
+.ctnSendDataClsCm:hover{
+  cursor: pointer;
+}
+
+/* ::::::::::::::::::::::::: */
+/*   Styles Ctn cases  */
+/* ::::::::::::::::::::::::: */
+
+.casesCtnClsCm{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  /* display: none; */
+}
+
+
+.backCtn, .backObsClsCtn{
+  width: 100%;
+  height: 30px;
+  background-color: var(--cyanCm);
+}
+.backTrayClsCm, .backRequestsClsCm{
+  background-color: inherit;
+  border: none;
+  color: #0090F8;
+  height: 30px;
+}
+.backTrayClsCm:hover{
+  cursor: pointer;
+}
+.backRequestsClsCm:hover{
+  cursor: pointer;
+}
+
+.CtnFormCasesClsCm{
+  height: 100%;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+}
+
+.CtnHeadClsCm{
+  height: 30px;
+  display: flex;
+  flex-direction: row;
+}
+
+.itemHeaderClsCm{
+  width: 50%;
+}
+
+
+#CtnObsCaseCm{
+  text-align: right;
+}
+
+#titleCaseCm{
+  display: flex;
+}
+#titleCaseCm span {
+  /* align-self: center; */
+  font-weight: bold;
+  font-size: 18px;
+}
+
+#btnObsCaseCm{
+  background-color: var(--greenCm);
+  color: white;
+  border: none;
+  width: 80px;
+  height: 30px;
+  border-radius: 5px;
+}
+#btnObsCaseCm:hover{
+  cursor:pointer;
+}
+
+
+.CtnPredInfoClsCm{
+  /* height: 100%; */
+  margin-top: 10px;
+  
+}
+
+.caseInfoClsCm{
+  margin-top: 5px;
+  box-shadow: 0px 0px 10px #C3C3C3;
+}
+
+.headPredInfoClsCm{
+  display: flex;
+  flex-direction: row;
+  background-color: var(--blueCm);
+  height: 30px;
+  border-radius: 5px 5px 0px 0px;
+}
+
+.headPredInfoClsCm:hover{
+  cursor: pointer;
+}
+
+.codPredClsCm{
+  width: 50%;
+  color: white;
+  display: flex;
+  padding: 10px;
+}
+
+.codPredClsCm span{
+  /* align-self: center; */
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.toggleClsCm{
+  width: 50%;
+  text-align: right;
+  display: flex;
+}
+
+.iconToggleClsCm{
+  width: 100%;
+  /* align-self: center; */
+  color: white;
+  font-size: 14px;
+  padding: 10px;
+}
+
+.bodyPredInfoClsCm{
+  border: 1px solid #e5e3e3;
+  border-top: none;
+  border-radius: 0px 0px 5px 5px;
+  background: #F8F8F8;
+  padding: 10px;
+}
+
+.otherInfoCaseClsCm{
+  margin-top: 10px;
+  margin-bottom: 10px;
+  /* display: none; */
+}
+
+/* .otherInfoCaseClsCm.active{
+  display: block;
+} */
+
+
+.otherDocItemClsCm{
+  display: flex;
+  flex-direction: row;
+}
+
+.CtnShowClsCm{
+  text-align: right;
+  width: 20%;
+}
+.showOtherDocClsCm{
+  background-color: inherit;
+  border: none;
+  color: var(--blueCm);
+  height: 20px;
+  width: 30px;
+}
+.showOtherDocClsCm:hover{
+  cursor: pointer;
+}
+.CtnTitleOtherDocClsCm{
+  display: flex;
+  width: 80%;
+}
+
+/* .CtnTitleOtherDocClsCm:hover{
+  cursor: pointer;
+} */
+
+.alignVCenter{
+  align-self: center;
+}
+
+.ctnParamsCm{
+  display: flex;
+  flex-direction: row;
+}
+
+.lblParamCm{
+  width: 80%;
+  display: flex;
+  padding-left: 10px;
+  /* text-indent: 10px; */
+}
+
+.ctnBtnParamCm{
+  width: 20%;
+  text-align: right;
+}
+
+.btnParamsClsCm{
+  border: none;
+  background-color: inherit;
+  width: 30px;
+  height: 20px;
+}
+
+.btnParamsClsCm:hover{
+  cursor:pointer
+}
+
+.btnSendClsCm{
+  width: 100%;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--greenCm);
+  color: white;
+  height: 25px;
+  margin-top: 10px;
+  align-self: end;
+}
+
+.lblBoldClsCm{
+  font-weight: bold;
+}
+
+.mainFormsClsCm{
+  display: none;
+}
+
+.mainFormsClsCm.active{
+  display: flex;
+  flex-direction: column;
+}
+
+.caseClsCm{
+  display: none;
+  height: 100%;
+}
+.caseClsCm.active{
+  display: flex;
+  flex-direction: column;
+  /* height: 100%; */
+}
+
+
+/* #backObsFormCm{
+  display: flex;
+  flex-direction: row;
+} */
+
+/* #imgAddedObsCm{
+  width: 70%;
+  text-align: center;
+  border: 1px solid var(--grayCm);
+  border-radius: 5px;
+  align-self: center;
+} */
+
+#btnAddImgObsCm{
+  border: none;
+  background-color: inherit;
+}
+
+#btnAddImgObsCm:hover{
+  cursor: pointer;
+}
+
+/* #ctnTextAreaCm{
+  margin-bottom: 10px;
+} */
+
+/* #ctnBtnAddImgObsCm{
+  align-self: center;
+} */
+
+
+/* #imageUploadGraphGhId {
+  margin: 25%;
+  cursor: pointer;
+  content: url('../images/icon.png');
+} */
+
+
+/* ::::::::::::::::::::::::: */
+/*   Styles Obsform cases    */
+/* ::::::::::::::::::::::::: */
+
+.obsCtnClsCm{
+  width: 100%;
+  height: 100%;
+}
+
+
+.ctnObsFormClsCm{
+  padding: 15px 12px 12px 12px;
+}
+
+textarea {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: 100%;
+  height: 150px;
+  padding: 12px 20px;
+  box-sizing: border-box;
+  border: 1px solid var(--grayCm);
+  border-radius: 4px;
+  background-color: white;
+  /* font-size: 16px; */
+  resize: none;
+}
+
+.ctnUploadImgClsCm{
+  margin-top: 10px;
+  font-size: 80px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.imgUploadClsCm{
+  position:relative;
+  color: var(--blueCm);
+  width: 38%;
+  text-align: center;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px #C3C3C3;
+}
+
+input[type='file']{
+  height:200px;
+  width:200px;
+  position:absolute;
+  top:0;
+  left:0;
+  opacity:0;
+  cursor:pointer;
+}
+
+.thumbnailClsCm{
+  width: 60%;
+  text-align: center;
+  border: 1px solid var(--grayCm);
+  border-radius: 10px;
+  color: var(--grayCm);
+}
+
+.ctnButtonSendDataObsClsCm{
+  display: flex;
+  height: 100%;
+  padding: 15px 12px 12px 12px;
+}
+
+#sendDataObsGrCm{
+  align-self: end;
+}
+
+
+
+.coordsCtnClsCm{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.coordsClsCm{
+  width: 48%;
+}
+
+.inputInfoClsCm{
+  padding: 0;
+  width: 100%;
+  border: 1px solid var(--grayCm);
+  padding: 5px;
+  border-radius: 5px;
+  outline: none;
+  background: var(--gray2Cm);
+}
