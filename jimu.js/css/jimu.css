@@ -1486,7 +1486,7 @@ widget:jimu-w
   height: 100%;
 }
 .jimu-widget-frame.jimu-container{
-  overflow-x: auto;
+  /* overflow-x: auto; */
   overflow-y: auto;
   position: relative;
   /* padding: 14px 14px 14px 14px; */
@@ -7035,7 +7035,7 @@ body:not(.ie-gte-10) .jimu-dijit-statistics-chart{
 .jimu-agol-loading .loading-container{
   position:absolute;
   width:100%;
-  top:50%;
+  top:75%;
   color:#000000;
   font-weight:bold;
   text-align: center;

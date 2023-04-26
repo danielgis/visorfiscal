@@ -2,20 +2,23 @@
   "theme": {
     "name": "FoldableTheme",
     "styles": [
-      "default",
+      "yellow",
       "black",
+      "default",
       "blue",
       "cyan",
       "green",
       "purple",
-      "red",
-      "yellow"
+      "red"
     ],
     "version": "2.26",
     "sharedTheme": {
       "isPortalSupport": false,
       "useHeader": false,
       "useLogo": false
+    },
+    "customStyles": {
+      "mainBackgroundColor": "#181824"
     }
   },
   "portalUrl": "https://ws.mineco.gob.pe/portaldf",
@@ -306,15 +309,18 @@
     }
   },
   "loadingPage": {
-    "backgroundColor": "#508dca",
+    "backgroundColor": "#181823",
     "backgroundImage": {
-      "visible": false
+      "visible": true,
+      "uri": "configs/loading/images/background.png",
+      "width": 646,
+      "height": 248
     },
     "loadingGif": {
       "visible": true,
-      "uri": "configs/loading/images/predefined_loading_1.gif",
+      "uri": "/webappbuilder/apps/2/configs/loading/images/predefined_loading_2.gif",
       "width": 58,
-      "height": 29
+      "height": 10
     }
   },
   "wabVersion": "2.26",

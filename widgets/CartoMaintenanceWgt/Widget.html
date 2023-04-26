@@ -1,9 +1,4 @@
 <div>
-
-  <!-- <h3>${nls.widgetTitle}</h3>
-  <p>${nls.description}</p>
-
-  <p>Service URL: ${config.serviceUrl}</p> -->
   <div class="mainCtnCm">
     <div class="requestTrayCtnCm mainFormsClsCm active" data-dojo-attach-point="requestTrayApCm">
       <div id="searchCtnCm" class="searchCtnClsCm">
@@ -11,18 +6,18 @@
         <input type="text" id="searchTbxCm" class="searchTbxClsCm" placeholder="Búsqueda por código">
       </div>
       <div id="tabFilterCtnCm" class="tabFilterCtnClsCm">
-        <button id="por_atender" class="tablinksCm active">Por atender</button>
-        <button id="observado" class="tablinksCm">Observados</button>
-        <button id="atendido" class="tablinksCm">Atendidos</button>
+        <button id="por_atender" class="tablinksCm active">${nls.statusToAttend}</button>
+        <button id="observado" class="tablinksCm">${nls.statusObserved}</button>
+        <button id="atendido" class="tablinksCm">${nls.statusServiced}</button>
       </div>
       <div id="tableRequestCtnCm">
         <table id="tableRequestCm" class="tableRequestClsCm" data-dojo-attach-point="tableRequestApCm">
           <thead>
             <tr>
-              <th>Id</th>
-              <th>Actualización</th>
-              <th>Códigos</th>
-              <th>Fecha</th>
+              <th>${nls.columnId}</th>
+              <th>${nls.columnCase}</th>
+              <th>${nls.columCPM}</th>
+              <th>${nls.columnDate}</th>
               <th></th>
             </tr>
           </thead>
@@ -32,13 +27,13 @@
 
       </div>
       <div id="reportCtnCm">
-        <button id="btnReportCm"><i class="fas fa-file-alt"></i> Reporte</button>
+        <button id="btnReportCm"><i class="fas fa-file-alt"></i> ${nls.report}</button>
       </div>
     </div>
     <div class="casesCtnClsCm mainFormsClsCm" data-dojo-attach-point="casesCtnApCm">
       <div class="backCtn">
         <button id="backTrayCm" class="backTrayClsCm">
-          <i class='fas fa-angle-left'></i> Volver a bandeja
+          <i class='fas fa-angle-left'></i> ${nls.backTray}
         </button>
       </div>
       <div class="CtnFormCasesClsCm">
@@ -49,49 +44,12 @@
           </div>
           <!-- Boton de observacion -->
           <div id="CtnObsCaseCm" class="itemHeaderClsCm">
-            <button id="btnObsCaseCm">Obs. act</button>
+            <button id="btnObsCaseCm">${nls.observeUpdate}</button>
           </div>
         </div>
         <!-- Listado de registros -->
         <div class="CtnPredInfoClsCm">
-          <div class="caseInfoClsCm">
-            <div id="headPredInfoCm" class="headPredInfoClsCm">
-              <div class="codPredClsCm">
-                <!-- <span class="alignVCenter">Predio: 17140204981</span> -->
-              </div>
-              <div class="toggleClsCm">
-                <span class="iconToggleClsCm alignVCenter">
-                  <i class='fas fa-angle-down'></i>
-                </span>
-              </div>
-            </div>
-            <div id="bodyPredInfoCm" class="bodyPredInfoClsCm">
-              <div class="coordsCtnClsCm">
-                <div class="coordsClsCm">
-                  <label for="latCm">Latitud:</label>
-                  <input type="text" id="latCm" class="inputInfoClsCm" name="latCm" value="-17.1259" data-dojo-attach-point="latApCm" readonly>
-                </div>
-                <div class="coordsClsCm">
-                  <label for="lngCm">Longitud:</label>
-                  <input type="text" id="lngCm" class="inputInfoClsCm" name="lngCm" value="-71.805" data-dojo-attach-point="lngApCm" readonly>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <!-- <div class="caseInfoClsCm">
-            <div id="headPredInfoCm" class="headPredInfoClsCm">
-              <div class="codPredClsCm">
-                <span>Predio: 17140204981</span>
-              </div>
-              <div class="toggleClsCm">
-                <span class="iconToggleClsCm">
-                  <i class='fas fa-angle-down'></i>
-                </span>
-              </div>
-            </div>
-            <div id="bodyPredInfoCm" class="bodyPredInfoClsCm"></div>
-          </div> -->
+
         </div>
         <div class="otherInfoCaseClsCm" data-dojo-attach-point="otherInfoCaseApCm">
           <div class="otherDocItemClsCm">
@@ -142,7 +100,7 @@
             </div>
           </div>
           <div class="ctnSendDataClsCm">
-            <button id="sendDataGrCm" class="btnSendClsCm">
+            <button id="sendDataRsCm" class="btnSendClsCm">
               Enviar datos
             </button>
           </div>
@@ -207,36 +165,43 @@
               </button>
             </div>
           </div>
-          <div class="ctnParamsCm">
-            <div class="lblParamCm">
-              <span class="alignVCenter">
-                Seleccionar ubicación del predio resultante de la división
-              </span>
-            </div>
-            <div class="ctnBtnDvCm ctnBtnParamCm">
-              <button id="btnDrawMarkerDvCm" class="btnParamsClsCm">
-                <i class='fas fa-map-marker-alt'></i>
-              </button>
-            </div>
-          </div>
           <div class="ctnSendDataClsCm">
             <button id="sendDataDvCm" class="btnSendClsCm">
               Enviar datos
             </button>
           </div>
         </div>
-        <div id="eliminacionCm" class="caseClsCm" data-dojo-attach-point="eliminacionApCm"></div>
+        <div id="eliminacionCm" class="caseClsCm" data-dojo-attach-point="eliminacionApCm">
+          <span class="lblBoldClsCm">Eliminar predio</span>
+          <div class="ctnParamsCm">
+            <div class="lblParamCm">
+              <span class="alignVCenter">
+                Aplicar la eliminación del predio
+              </span>
+            </div>
+            <div class="ctnBtnParamCm">
+              <button id="btnEliminarLoteCm" class="btnParamsClsCm">
+                <i class='fas fa-map-marker-alt'></i>
+              </button>
+            </div>
+          </div>
+          <div class="ctnSendDataClsCm">
+            <button id="sendDataDtCm" class="btnSendClsCm">
+              Enviar datos
+            </button>
+          </div>
+        </div>
         <div id="actGeomCm" class="caseClsCm" data-dojo-attach-point="actGeomApCm"></div>
       </div>
     </div>
     <div class="obsCtnClsCm mainFormsClsCm" data-dojo-attach-point="obsCtnApCm">
       <div class="backObsClsCtn">
         <button id="backRequestsCm" class="backRequestsClsCm">
-          <i class='fas fa-angle-left'></i> Volver a solicitud
+          <i class='fas fa-angle-left'></i> ${nls.backRequest}
         </button>
       </div>
       <div class="ctnObsFormClsCm">
-        <span>Observar actualización</span>
+        <span>${nls.observeUpdateExtend}</span>
         <div class="caseInfoClsCm">
           <div id="headPredInfoCm" class="headPredInfoClsCm">
             <div id="headeRequestsCtnCm" class="codPredClsCm">
@@ -244,9 +209,9 @@
             </div>
           </div>
           <div id="bodyPredInfoCm" class="bodyPredInfoClsCm">
-            <p>1. Detallar Observación</p>
+            <p>${nls.labelObservDetail}</p>
             <textarea></textarea>
-            <p>2. Adjunta captura</p>
+            <p>${nls.labelCapture}</p>
             <div class="ctnUploadImgClsCm">
               <div class="imgUploadClsCm">
                 <input type="file" />
@@ -262,7 +227,7 @@
       </div>
       <div class="ctnButtonSendDataObsClsCm">
         <button id="sendDataObsGrCm" class="sendDataGrClsCm">
-          Enviar datos
+          ${nls.labelSendObsData}
         </button>
       </div>
     </div>
