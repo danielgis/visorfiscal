@@ -4,7 +4,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
   // importar "jimu/dijit/LoadingShelter"
 
   // import Polygon from "esri/geometry/Polygon";
-  var dataRequestsToAttendCm = [{ "case": "Reasignar", "caseId": 1, "cod_pre": "01-23-0009", "estado": "por_atender", "fec_solicitud": "10/112022", "id_solicitud": 1 }, { "case": "Acumulación", "caseId": 2, "cod_pre": "01-23-0027,01-23-0028,01-23-0029", "estado": "por_atender", "fec_solicitud": "10/112022", "id_solicitud": 2 }, { "case": "División", "caseId": 3, "cod_pre": "15-16-0003", "estado": "por_atender", "fec_solicitud": "10/11/2022", "id_solicitud": 3 }, { "case": "Eliminación", "caseId": 5, "cod_pre": "15-16-0001", "estado": "por_atender", "fec_solicitud": "10/11/2022", "id_solicitud": 5 }, { "case": "Reasignar", "caseId": 1, "cod_pre": "1376", "estado": "por_atender", "fec_solicitud": "10/11/2022", "id_solicitud": 6 }, { "case": "Fusión", "caseId": 2, "cod_pre": "1376", "estado": "obaservado", "fec_solicitud": "10/11/2022", "id_solicitud": 7 }, { "case": "División", "caseId": 3, "cod_pre": "1376", "estado": "observado", "fec_solicitud": "10/11/2022", "id_solicitud": 8 }, { "case": "Eliminación", "caseId": 5, "cod_pre": "1376", "estado": "atendido", "fec_solicitud": "10/11/2022", "id_solicitud": 10 }];
+  var dataRequestsToAttendCm = [{ "case": "Reasignar", "caseId": 1, "cod_pre": "01-23-0009", "estado": "por_atender", "fec_solicitud": "10/112022", "id_solicitud": 1 }, { "case": "Acumulación", "caseId": 2, "cod_pre": "01-28-0009,01-28-0010", "estado": "por_atender", "fec_solicitud": "10/112022", "id_solicitud": 2 }, { "case": "División", "caseId": 3, "cod_pre": "01-23-0011", "estado": "por_atender", "fec_solicitud": "10/11/2022", "id_solicitud": 3 }, { "case": "Eliminación", "caseId": 5, "cod_pre": "15-16-0001", "estado": "por_atender", "fec_solicitud": "10/11/2022", "id_solicitud": 5 }, { "case": "Reasignar", "caseId": 1, "cod_pre": "1376", "estado": "por_atender", "fec_solicitud": "10/11/2022", "id_solicitud": 6 }, { "case": "Fusión", "caseId": 2, "cod_pre": "1376", "estado": "obaservado", "fec_solicitud": "10/11/2022", "id_solicitud": 7 }, { "case": "División", "caseId": 3, "cod_pre": "1376", "estado": "observado", "fec_solicitud": "10/11/2022", "id_solicitud": 8 }, { "case": "Eliminación", "caseId": 5, "cod_pre": "1376", "estado": "atendido", "fec_solicitud": "10/11/2022", "id_solicitud": 10 }];
   // importar "dojo/Deferred"
 
   // importar esri/geometry/webMercatorUtils
@@ -13,8 +13,8 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
 
   var dataByRequest = {
     "1": [{ "cod_pre": "01-23-0009", "x": -79.739827, "y": -6.643564, "direccion": "Av. Los Jazmines 123", "num_alt": 567, "sec_eje": "Sección 1", "cod_cuc": "ABC123" }],
-    "2": [{ "cod_pre": "01-23-0027", "x": -67.89, "y": -12, "direccion": "Calle Las Rosas 456", "num_alt": 789, "sec_eje": "Sección 2", "cod_cuc": "DEF456" }, { "cod_pre": "01-23-0028", "x": 345.67, "y": 89.01, "direccion": "Jr. Los Girasoles 789", "num_alt": 234, "sec_eje": "Sección 3", "cod_cuc": "GHI789" }, { "cod_pre": "01-23-0029", "x": 345.67, "y": 89.01, "direccion": "Jr. Los Girasoles 789", "num_alt": 234, "sec_eje": "Sección 3", "cod_cuc": "GHI789" }],
-    "3": [{ "cod_pre": "15-16-0003", "x": -67.89, "y": -12, "direccion": "Calle Las Rosas 456", "num_alt": 789, "sec_eje": "Sección 2", "cod_cuc": "DEF456" }],
+    "2": [{ "cod_pre": "01-28-0009", "x": -67.89, "y": -12, "direccion": "Calle Las Rosas 456", "num_alt": 789, "sec_eje": "Sección 2", "cod_cuc": "DEF456" }, { "cod_pre": "01-28-0010", "x": 345.67, "y": 89.01, "direccion": "Jr. Los Girasoles 789", "num_alt": 234, "sec_eje": "Sección 3", "cod_cuc": "GHI789" }],
+    "3": [{ "cod_pre": "01-23-0011", "x": -67.89, "y": -12, "direccion": "Calle Las Rosas 456", "num_alt": 789, "sec_eje": "Sección 2", "cod_cuc": "DEF456" }],
     "5": [{ "cod_pre": "15-16-0001", "x": -67.89, "y": -12, "direccion": "Jr. Los Girasoles 789", "num_alt": 234, "sec_eje": "Sección 3", "cod_cuc": "GHI789" }]
   };
 
@@ -131,7 +131,8 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
     layersMap: [],
     queryUbigeo: paramsApp['ubigeo'] ? _UBIGEO_FIELD + ' = \'' + paramsApp['ubigeo'] + '\'' : "1=1",
     case: 0,
-    lotes: null,
+    lotesQuery: null,
+    idlotes: null,
     arancel: null,
     codigosPredios: null,
     xy: [],
@@ -312,6 +313,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
       var query = new Query();
 
       query.where = _UBIGEO_FIELD + ' = \'' + paramsApp['ubigeo'] + '\' and ' + _COD_PRE_FIELD + ' in (\'' + cod_pre.split(',').join("', '") + '\')';
+      console.log(query.where);
       // fields return
       query.outFields = [_ID_LOTE_P_FIELD, _COD_MZN_FIELD, _COD_SECT_FIELD];
       query.returnGeometry = false;
@@ -324,6 +326,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
         var idLote = results.features.map(function (i) {
           return i.attributes[_ID_LOTE_P_FIELD];
         });
+        selfCm.idlotes = idLote;
         var idmanzana = results.features.map(function (i) {
           return i.attributes[_COD_MZN_FIELD];
         });
@@ -332,7 +335,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
         });
         var queryLote = new Query();
         queryLote.where = _ID_LOTE_P_FIELD + ' in (' + idLote.join(",") + ') and (' + _UBIGEO_FIELD + ' = ' + paramsApp['ubigeo'] + ')';
-        selfCm.lotes = queryLote.where;
+        selfCm.lotesQuery = queryLote.where;
         selfCm.arancel = _UBIGEO_FIELD + ' = \'' + paramsApp.ubigeo + '\' and (' + _COD_MZN_FIELD + ' in (' + idmanzana.join(",") + ')) and (' + _COD_SECT_FIELD + ' IN (' + idsector.join(",") + '))';
         queryLote.returnGeometry = true;
         var qTaskLote = new QueryTask(selfCm.layersMap.getLayerInfoById(idLyrCfLotes).getUrl());
@@ -442,7 +445,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
         selfCm._removeLayerGraphic(idGraphicPredioSelectedCm);
         // selfCm._removeLayerGraphic(idGraphicLineaDivision)
         graphicLayerLineaDivision.clear();
-        selfCm.lotes = null;
+        selfCm.lotesQuery = null;
         selfCm.arancel = null;
         selfCm.xy = null;
       }
@@ -497,9 +500,8 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
             selfCm.map.setInfoWindowOnClick(true);
             toolbarCm.deactivate();
             // si es el caso reasignacion de predio
-            if (selfCm.case == 1) {
+            if (selfCm.case == 1 || selfCm.case == 2) {
               // obtener las coordenadas x, y del punto
-              console.log(value);
               var p4326 = webMercatorUtils.webMercatorToGeographic(new Point(value));
               selfCm.xy = [p4326.x, p4326.y];
             }
@@ -617,7 +619,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
       var union = geometryEngine.union(arr);
       return union;
     },
-    _ApplyFusionLotes: function _ApplyFusionLotes() {
+    _ApplyAcumulacionLotes: function _ApplyAcumulacionLotes() {
       selfCm._removeLayerGraphic(idGraphicPredioCm);
       selfCm._removeLayerGraphic(idGraphicLoteCm);
       selfCm._removeLayerGraphic(idGraphicPuntoLote);
@@ -630,7 +632,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
       });
 
       var query = new Query();
-      query.where = selfCm.lotes;
+      query.where = selfCm.lotesQuery;
       query.outFields = ["*"];
       query.returnGeometry = true;
       var qTask = new QueryTask(selfCm.layersMap.getLayerInfoById(idLyrCfLotes).getUrl());
@@ -670,7 +672,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
       }).then(function () {
         var query = new Query();
         // query.where = `${_UBIGEO_FIELD} = '${paramsApp.ubigeo}' and ${_COD_MZN_FIELD} = '040' and ${_COD_SECT_FIELD} = '04'`
-        console.log(selfCm.arancel);
+        // console.log(selfCm.arancel)
         query.where = selfCm.arancel;
         // especificar los campos devueltos
         query.outFields = [_UBIGEO_FIELD, _F_MZN_FIELD];
@@ -701,7 +703,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
               if (!isItc) {
                 continue;
               }
-              // saber si un key esta dentro del objeot frentes
+              // saber si un key esta dentro del objeto frentes
               if (!frentes.hasOwnProperty(row.attributes[_F_MZN_FIELD])) {
                 frentes[row.attributes[_F_MZN_FIELD]] = row.geometry;
               } else {
@@ -873,7 +875,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
 
       var query = new Query();
       // query.where = `(${_UBIGEO_FIELD} = '${paramsApp.ubigeo}') and (${_ID_LOTE_P_FIELD} in (49))`
-      query.where = selfCm.lotes;
+      query.where = selfCm.lotesQuery;
       query.outFields = ["*"];
       query.returnGeometry = true;
       var qTask = new QueryTask(selfCm.layersMap.getLayerInfoById(idLyrCfLotes).getUrl());
@@ -1073,7 +1075,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
 
       var query = new Query();
       // query.where = `(${_UBIGEO_FIELD} = '${paramsApp.ubigeo}') and (${_ID_LOTE_P_FIELD} in (3229))`
-      query.where = selfCm.lotes;
+      query.where = selfCm.lotesQuery;
       query.outFields = ["*"];
       query.returnGeometry = true;
       var qTask = new QueryTask(selfCm.layersMap.getLayerInfoById(idLyrCfLotes).getUrl());
@@ -1086,8 +1088,6 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
       });
     },
     _executeReasignacionGpService: function _executeReasignacionGpService(evt) {
-      // dojo.byId("sendDataRsCm").disabled = disabled;
-      // dojo.byId("btnCancelProcessGhId").disabled = !disabled;
       selfCm._showMessageConfirm().then(function (result) {
         if (result) {
           var _params = {
@@ -1111,6 +1111,66 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
         }
       });
     },
+    _executeAcumulacionGpService: function _executeAcumulacionGpService(evt) {
+      selfCm._showMessageConfirm().then(function (result) {
+        if (result) {
+          var _params2 = {
+            "lotes_orig": selfCm.idlotes,
+            "ubigeo": paramsApp['ubigeo'],
+            "lote_geom": JSON.stringify(selfCm.map.getLayer("graphicLoteCm").graphics[0].geometry.toJson()),
+            "lote_pun_geon": JSON.stringify(selfCm.map.getLayer("graphicPuntoLote").graphics.map(function (i) {
+              return [i.geometry.x, i.geometry.y];
+            })),
+            "predio_geom": selfCm.xy,
+            "user": paramsApp['username'],
+            "id_solicitud": selfCm.codRequestsCm
+          };
+          console.log(_params2);
+
+          // revisar si alguna propiedad tiene valor nulo o indefinido
+          for (var key in _params2) {
+            if (_params2[key] == null || _params2[key] == undefined) {
+              selfCm._showMessage('Debe especificar el valor de ' + key, type = "error");
+              return;
+            }
+          }
+          selfCm._executeGPService(selfCm.config.acumulacionUrl, _params2);
+        } else {
+          return;
+        }
+      });
+      // console.log(JSON.stringify(selfCm.idlotes))
+      // console.log(paramsApp['ubigeo'])
+      // console.log(JSON.stringify(selfCm.map.getLayer("graphicLoteCm").graphics[0].geometry.toJson()))
+      // console.log(JSON.stringify(selfCm.map.getLayer("graphicPuntoLote").graphics.map((i) => {return [i.geometry.x, i.geometry.y]})))
+      // console.log(JSON.stringify(selfCm.xy))
+      // console.log(paramsApp['username'])
+      // console.log(selfCm.codRequestsCm)
+
+      // selfCm._showMessageConfirm().then(function (result) {
+      //   if (result){
+      //     let params = {
+      //       "cod_pred": selfCm.codigosPredios,
+      //       "ubigeo": paramsApp['ubigeo'],
+      //       "geometry": selfCm.xy,
+      //       "user": paramsApp['username']
+      //     }
+      //     console.log(params)
+
+      //     // revisar si alguna propiedad tiene valor nulo o indefinido
+      //     for (let key in params){
+      //       if (params[key] == null || params[key] == undefined){
+      //         selfCm._showMessage(`Debe especificar el valor de ${key}`, type="error");
+      //         return
+      //       }
+      //     }
+      //     // selfCm._executeGPService(selfCm.config.reasignacionUrl, params)
+      //   }
+      //   else {
+      //     return
+      //   }
+      // })
+    },
     _executeGPService: function _executeGPService(url, params) {
       selfCm.loading.show();
 
@@ -1125,6 +1185,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
       var textMessage = JobInfo.messages.map(function (message) {
         return message.description;
       });
+      selfCm.loading.textNode.style.textShadow = "2px 2px 0 #FFF, -2px -2px 0 #FFF, 2px -2px 0 #FFF, -2px 2px 0 #FFF";
       selfCm.loading.textNode.innerHTML = textMessage.slice(-1)[0] ? textMessage.slice(-1)[0] : '';
     },
     _completeCallback: function _completeCallback(JobInfo) {
@@ -1150,6 +1211,13 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
                 selfCm._removeLayerGraphic(idGraphicPredioCm);
                 dojo.query("#titleCaseCm")[0].click();
                 break;
+              case "2":
+                selfCm._removeLayerGraphic(idGraphicPredioCm);
+                selfCm._removeLayerGraphic(idGraphicLoteCm);
+                selfCm._removeLayerGraphic(idGraphicPuntoLote);
+                selfCm._removeLayerGraphic(idGraphicFrenteLote);
+                selfCm.map.getLayer("CARTO_FISCAL_6806").setVisibility(false);
+                selfCm.map.getLayer("CARTO_FISCAL_6806").setVisibility(true);
               default:
                 break;
             }
@@ -1203,12 +1271,13 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
       dojo.query("#btnAddMarkerCm").on('click', this._locateMarker);
       dojo.query("#btnDrawMarkerCm").on('click', this._activateTool);
 
-      dojo.query("#btnFsCm").on('click', this._ApplyFusionLotes);
+      dojo.query("#btnFsCm").on('click', this._ApplyAcumulacionLotes);
       dojo.query("#btnDrawLinesDvCm").on('click', this._activateToolLinesDivision);
       dojo.query("#btnApplyDvCm").on('click', this._ApplyDivideLotes);
       dojo.query("#btnEliminarLoteCm").on('click', this._applyDeleteLote);
       dojo.query("#titleCaseCm").on('click', this._zoomHomeRequests);
       dojo.query("#sendDataRsCm").on('click', this._executeReasignacionGpService);
+      dojo.query('#sendDataFsCm').on('click', this._executeAcumulacionGpService);
       this._loadIniRequestsCm();
     }
   }

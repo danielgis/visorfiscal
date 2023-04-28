@@ -1,3 +1,4 @@
 {
-  "reasignacionUrl": "https://ws.mineco.gob.pe/serverdf/rest/services/geoprocesos/reasignacion_predio/GPServer/Reasignacion%20de%20predio"
+  "reasignacionUrl": "https://ws.mineco.gob.pe/serverdf/rest/services/geoprocesos/reasignacion_predio/GPServer/Reasignacion%20de%20predio",
+  "acumulacionUrl": "https://ws.mineco.gob.pe/serverdf/rest/services/geoprocesos/acumulacion_predio/GPServer/Acumulacion%20de%20predios"
 }
