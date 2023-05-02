@@ -4,7 +4,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
   // importar "jimu/dijit/LoadingShelter"
 
   // import Polygon from "esri/geometry/Polygon";
-  var dataRequestsToAttendCm = [{ "case": "Reasignar", "caseId": 1, "cod_pre": "01-23-0009", "estado": "por_atender", "fec_solicitud": "10/112022", "id_solicitud": 1 }, { "case": "Acumulación", "caseId": 2, "cod_pre": "01-28-0009,01-28-0010", "estado": "por_atender", "fec_solicitud": "10/112022", "id_solicitud": 2 }, { "case": "División", "caseId": 3, "cod_pre": "01-23-0011", "estado": "por_atender", "fec_solicitud": "10/11/2022", "id_solicitud": 3 }, { "case": "Eliminación", "caseId": 5, "cod_pre": "15-16-0001", "estado": "por_atender", "fec_solicitud": "10/11/2022", "id_solicitud": 5 }, { "case": "Reasignar", "caseId": 1, "cod_pre": "1376", "estado": "por_atender", "fec_solicitud": "10/11/2022", "id_solicitud": 6 }, { "case": "Fusión", "caseId": 2, "cod_pre": "1376", "estado": "obaservado", "fec_solicitud": "10/11/2022", "id_solicitud": 7 }, { "case": "División", "caseId": 3, "cod_pre": "1376", "estado": "observado", "fec_solicitud": "10/11/2022", "id_solicitud": 8 }, { "case": "Eliminación", "caseId": 5, "cod_pre": "1376", "estado": "atendido", "fec_solicitud": "10/11/2022", "id_solicitud": 10 }];
+  var dataRequestsToAttendCm = [{ "case": "Reasignar", "caseId": 1, "cod_pre": "01-21-0001", "estado": "por_atender", "fec_solicitud": "10/112022", "id_solicitud": 1 }, { "case": "Acumulación", "caseId": 2, "cod_pre": "01-24-0010,01-24-0009", "estado": "por_atender", "fec_solicitud": "10/112022", "id_solicitud": 2 }, { "case": "División", "caseId": 3, "cod_pre": "01-23-0011", "estado": "por_atender", "fec_solicitud": "10/11/2022", "id_solicitud": 3 }, { "case": "Eliminación", "caseId": 5, "cod_pre": "01-23-0016", "estado": "por_atender", "fec_solicitud": "10/11/2022", "id_solicitud": 5 }, { "case": "Reasignar", "caseId": 6, "cod_pre": "01-38-0010", "estado": "por_atender", "fec_solicitud": "10/11/2022", "id_solicitud": 6 }, { "case": "Acumulación", "caseId": 7, "cod_pre": "01-58-0004,01-58-0003", "estado": "por_atender", "fec_solicitud": "10/112022", "id_solicitud": 2 }, { "case": "Fusión", "caseId": 8, "cod_pre": "1376", "estado": "obaservado", "fec_solicitud": "10/11/2022", "id_solicitud": 7 }, { "case": "División", "caseId": 9, "cod_pre": "1376", "estado": "observado", "fec_solicitud": "10/11/2022", "id_solicitud": 8 }, { "case": "Eliminación", "caseId": 10, "cod_pre": "1376", "estado": "atendido", "fec_solicitud": "10/11/2022", "id_solicitud": 10 }];
   // importar "dojo/Deferred"
 
   // importar esri/geometry/webMercatorUtils
@@ -12,10 +12,12 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
   // import keys from 'dojo/keys';
 
   var dataByRequest = {
-    "1": [{ "cod_pre": "01-23-0009", "x": -79.739827, "y": -6.643564, "direccion": "Av. Los Jazmines 123", "num_alt": 567, "sec_eje": "Sección 1", "cod_cuc": "ABC123" }],
-    "2": [{ "cod_pre": "01-28-0009", "x": -67.89, "y": -12, "direccion": "Calle Las Rosas 456", "num_alt": 789, "sec_eje": "Sección 2", "cod_cuc": "DEF456" }, { "cod_pre": "01-28-0010", "x": 345.67, "y": 89.01, "direccion": "Jr. Los Girasoles 789", "num_alt": 234, "sec_eje": "Sección 3", "cod_cuc": "GHI789" }],
+    "1": [{ "cod_pre": "01-21-0001", "x": -79.739827, "y": -6.643564, "direccion": "Av. Los Jazmines 123", "num_alt": 567, "sec_eje": "Sección 1", "cod_cuc": "ABC123" }],
+    "2": [{ "cod_pre": "01-24-0010", "x": -67.89, "y": -12, "direccion": "Calle Las Rosas 456", "num_alt": 789, "sec_eje": "Sección 2", "cod_cuc": "DEF456" }, { "cod_pre": "01-24-0009", "x": 345.67, "y": 89.01, "direccion": "Jr. Los Girasoles 789", "num_alt": 234, "sec_eje": "Sección 3", "cod_cuc": "GHI789" }],
     "3": [{ "cod_pre": "01-23-0011", "x": -67.89, "y": -12, "direccion": "Calle Las Rosas 456", "num_alt": 789, "sec_eje": "Sección 2", "cod_cuc": "DEF456" }],
-    "5": [{ "cod_pre": "15-16-0001", "x": -67.89, "y": -12, "direccion": "Jr. Los Girasoles 789", "num_alt": 234, "sec_eje": "Sección 3", "cod_cuc": "GHI789" }]
+    "5": [{ "cod_pre": "01-23-0016", "x": -67.89, "y": -12, "direccion": "Jr. Los Girasoles 789", "num_alt": 234, "sec_eje": "Sección 3", "cod_cuc": "GHI789" }],
+    "6": [{ "cod_pre": "01-38-0010", "x": -79.739827, "y": -6.643564, "direccion": "Av. Los Jazmines 123", "num_alt": 567, "sec_eje": "Sección 1", "cod_cuc": "ABC123" }],
+    "7": [{ "cod_pre": "01-58-0004", "x": -67.89, "y": -12, "direccion": "Calle Las Rosas 456", "num_alt": 789, "sec_eje": "Sección 2", "cod_cuc": "DEF456" }, { "cod_pre": "01-58-0003", "x": 345.67, "y": 89.01, "direccion": "Jr. Los Girasoles 789", "num_alt": 234, "sec_eje": "Sección 3", "cod_cuc": "GHI789" }]
   };
 
   var requestToAttendState = "por_atender";
