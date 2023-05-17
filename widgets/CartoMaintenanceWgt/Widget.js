@@ -1695,7 +1695,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
             "lotes_orig": selfCm.idlotes,
             "ubigeo": paramsApp['ubigeo'],
             "lote_geom": JSON.stringify(selfCm.map.getLayer("graphicLoteCm").graphics[0].geometry.toJson()),
-            "lote_pun_geom": JSON.stringify(selfCm.map.getLayer(idGraphicPuntoLote).graphics.map(function (i) {
+            "lote_pun_geon": JSON.stringify(selfCm.map.getLayer(idGraphicPuntoLote).graphics.map(function (i) {
               return [i.geometry.x, i.geometry.y];
             })),
             "predio_geom": JSON.stringify({ 'cod_pre': selfCm.idPredioAcumulacion.split("_")[2], 'coords': selfCm.xy }),
@@ -1730,10 +1730,31 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
           return;
         }
         var labelCodLotesLayer = selfCm.map.getLayer(idGraphicLabelCodLote);
-        for (var pred in labelCodLotesLayer.graphics) {
-          if (!pred.attributes.lot_urb || pred.attributes.lot_urb === "...") {
-            selfCm._showMessage("Debe especificar los valores de Lote Urbano", type = "error");
-            return;
+        var _iteratorNormalCompletion12 = true;
+        var _didIteratorError12 = false;
+        var _iteratorError12 = undefined;
+
+        try {
+          for (var _iterator12 = labelCodLotesLayer.graphics[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+            var pred = _step12.value;
+
+            if (!pred.attributes.lot_urb || pred.attributes.lot_urb === "...") {
+              selfCm._showMessage("Debe especificar los valores de Lote Urbano", type = "error");
+              return;
+            }
+          }
+        } catch (err) {
+          _didIteratorError12 = true;
+          _iteratorError12 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion12 && _iterator12.return) {
+              _iterator12.return();
+            }
+          } finally {
+            if (_didIteratorError12) {
+              throw _iteratorError12;
+            }
           }
         }
 
@@ -1855,6 +1876,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
         case "esriJobSucceeded":
           // El trabajo se ha completado satisfactoriamente y los resultados están disponibles.
           selfCm.gp.getResultData(JobInfo.jobId, "response", function (result) {
+            console.log(result);
             if (!result.value.status) {
               selfCm.busyIndicator.hide();
               selfCm._showMessage(result.value.message, type = "error");
