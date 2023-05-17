@@ -240,7 +240,8 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
     idPredioAcumulacion: '',
     editToolbar: null,
     queryRequests: {
-      ubigeo: paramsApp['ubigeo']
+      ubigeo: paramsApp['ubigeo'],
+      limit: 1000
     },
 
     postCreate: function postCreate() {
@@ -401,6 +402,39 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
       var target = evt.target;
       selfCm._loadRequestsCm(params, target);
     },
+    _loadDocSupportCm: function _loadDocSupportCm() {
+      var urlStatusRequest = selfCm.config.applicationListUrl + '/' + selfCm.codRequestsCm;
+      selfCm._callApiRestServices(urlStatusRequest, {}).then(function (result) {
+        try {
+          dojo.query("#showInfoDocCm")[0].value = result.support;
+          // if (result.idStatus != 1){
+          //   throw new Error(`Esta solicitud (${selfCm.codRequestsCm}) ya fue procesada con anterioridad: ${result.date}`)
+          // }
+          // selfCm.busyIndicator.show();
+          // // Agregar un elemento de texto debajo del BusyIndicator
+          // let buzyElm = dojo.query("#dojox_widget_Standby_0")[0]
+          // let imgElm = buzyElm.querySelector("img")
+          // let loadingText = document.createElement('div');
+          // loadingText.id = 'loadingTextCustom';
+          // loadingText.style.position = 'absolute';
+          // let topMessage = parseFloat(imgElm.style.top) + 80;
+          // loadingText.style.top = `${topMessage}px`;
+          // let leftImg = parseFloat(imgElm.style.left) + imgElm.width/2;
+          // loadingText.style.left = `${leftImg}px`;
+          // loadingText.style.transform = 'translate(-50%, -50%)';
+          // loadingText.style.background = 'white';
+          // loadingText.style.zIndex = '1000';
+
+          // dojo.query("#dojox_widget_Standby_0")[0].appendChild(loadingText);
+          // // selfCm._FormResult(selfCm.codRequestsCm, selfCm.caseDescription);
+          // selfCm.gp = new Geoprocessor(url);
+          // selfCm.gp.submitJob(params, selfCm._completeCallback, selfCm._statusCallback);        
+        } catch (error) {
+          selfCm.busyIndicator.hide();
+          selfCm._showMessage(error.message, type = "error");
+        }
+      });
+    },
     _loadRequestsCm: function _loadRequestsCm(evt) {
       selfCm.busyIndicator.show();
       selfCm._callApiRestServices(selfCm.config.applicationListUrl, selfCm.queryRequests).then(function (response) {
@@ -475,8 +509,8 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
         }, 2000);
       });
     },
-    _openSupportingDocument: function _openSupportingDocument() {
-      window.open(samplePdf, '_blank').focus();
+    _openSupportingDocument: function _openSupportingDocument(evt) {
+      window.open(evt.currentTarget.value, '_blank').focus();
     },
     _zoomExtentToLote: function _zoomExtentToLote(cod_pre) {
       var query = new Query();
@@ -631,6 +665,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
         selfCm.obsCtnApCm.classList.remove('active');
         selfCm.requestTrayApCm.classList.remove('active');
         selfCm.casesCtnApCm.classList.toggle('active');
+        selfCm._loadDocSupportCm();
       } else if (evt.currentTarget.id == 'backTrayCm' || evt.currentTarget.id == 'backTrayResultCm') {
         // desactivar el toolbarCm de edicion si esta activado
         // toolbarCm.deactivate()
@@ -1694,9 +1729,16 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
           selfCm._showMessage("La solicitud no se puede realizar porque no se graficaron los predios resultantes", type = "error");
           return;
         }
+        var labelCodLotesLayer = selfCm.map.getLayer(idGraphicLabelCodLote);
+        for (var pred in labelCodLotesLayer.graphics) {
+          if (!pred.attributes.lot_urb || pred.attributes.lot_urb === "...") {
+            selfCm._showMessage("Debe especificar los valores de Lote Urbano", type = "error");
+            return;
+          }
+        }
 
         if (result) {
-          var labelCodLotesLayer = selfCm.map.getLayer(idGraphicLabelCodLote);
+
           var _params3 = {
             "lote_orig": selfCm.idlotes[0],
             "ubigeo": paramsApp['ubigeo'],
