@@ -3,7 +3,7 @@
     <div class="requestTrayCtnCm mainFormsClsCm active" data-dojo-attach-point="requestTrayApCm">
       <div id="searchCtnCm" class="searchCtnClsCm">
         <span class="fa fa-search"></span>
-        <input type="text" id="searchTbxCm" class="searchTbxClsCm" placeholder="Búsqueda por código">
+        <input type="text" id="searchTbxCm" class="searchTbxClsCm" placeholder="Búsqueda por código" data-dojo-attach-point="searchTbxApCm">
       </div>
       <div id="tabFilterCtnCm" class="tabFilterCtnClsCm">
         <button id="por_atender" class="tablinksCm active">${nls.statusToAttend}</button>
@@ -40,7 +40,7 @@
         <!-- Cabecera de formulario de solicitud -->
         <div class="CtnHeadClsCm">
           <!-- titulo de formulario de solicitud -->
-          <div id="titleCaseCm" class="itemHeaderClsCm alignVCenter">
+          <div id="titleCaseCm" class="titleFormCm itemHeaderClsCm alignVCenter">
           </div>
           <!-- Boton de observacion -->
           <div id="CtnObsCaseCm" class="itemHeaderClsCm">
@@ -62,7 +62,7 @@
               </button>
             </div>
           </div>
-          <div class="otherDocItemClsCm">
+          <!-- <div class="otherDocItemClsCm">
             <div class="CtnTitleOtherDocClsCm">
               <span>Información complementaria</span>
             </div>
@@ -71,11 +71,11 @@
                 <i class='fas fa-eye'></i>
               </button>
             </div>
-          </div>
+          </div> -->
         </div>
         <div id="reasignarCm" class="caseClsCm" data-dojo-attach-point="reasignarApCm">
           <span id="spanGrCm" class="lblBoldClsCm">Graficar reubicación</span>
-          <div class="ctnParamsCm">
+          <!-- <div class="ctnParamsCm">
             <div class="lblParamCm">
               <span class="alignVCenter">
                 Visualizar ubicación registrada
@@ -86,7 +86,7 @@
                 <i class='fas fa-map-marker-alt'></i>
               </button>
             </div>
-          </div>
+          </div> -->
           <div class="ctnParamsCm">
             <div class="lblParamCm">
               <span class="alignVCenter">
@@ -115,23 +115,60 @@
             </div>
             <div class="ctnBtnParamCm">
               <button id="btnFsCm" class="btnParamsClsCm">
-                <i class='fas fa-map-marker-alt'></i>
+                <i class="far fa-clone"></i>
+                <!-- <i class='fas fa-map-marker-alt'></i> -->
               </button>
             </div>
           </div>
           <br>
-          <span class="lblBoldClsCm">Predio de la acumulación</span>
+          <!-- <span class="lblBoldClsCm">Predio de la acumulación</span> -->
+          <div class="ctnParamsCm">
+            <div class="lblParamCm">
+              <span class="alignVCenter">
+                Completar información del lote resultante
+              </span>
+            </div>          
+          </div>
+          <div class="ctnParamsCm ctnTablesClsCm">
+            <table class="tableClsCm">
+              <thead>
+                <tr>
+                  <th class="center-aligned">Nro</th>
+                  <th>Código de lote</th>
+                  <th >Lote urbano</th>
+                  <th class="center-aligned">Centrar</th>
+                </tr>
+              </thead>
+              <tbody data-dojo-attach-point="bodyTbDatosLoteFsApCm">
+              </tbody>
+            </table>           
+          </div>
           <div class="ctnParamsCm">
             <div class="lblParamCm">
               <span class="alignVCenter">
                 Seleccionar ubicación del predio resultante de la acumulación
               </span>
             </div>
-            <div class="ctnBtnParamCm">
+            <!-- <div class="ctnBtnParamCm">
               <button id="btnDrawMarkerFsCm" class="btnParamsClsCm">
                 <i class='fas fa-map-marker-alt'></i>
               </button>
-            </div>
+            </div> -->
+          </div>
+          <div class="ctnParamsCm ctnTablesClsCm">
+            <table class="tableClsCm">
+              <thead>
+                <tr>
+                  <th class="center-aligned">Nro</th>
+                  <!-- Agregar un salto de linea a texot -->
+                  <th>Cod. Predio Municipal</th>
+                  <th >Dirección</th>
+                  <th class="center-aligned">Ubicación</th>
+                </tr>
+              </thead>
+              <tbody data-dojo-attach-point="bodyTbPrediosFsApCm">
+              </tbody>
+            </table>           
           </div>
           <div class="ctnSendDataClsCm">
             <button id="sendDataFsCm" class="btnSendClsCm">
@@ -139,7 +176,7 @@
             </button>
           </div>
         </div>
-        <div id="divisionCm" class="caseClsCm" data-dojo-attach-point="divisionApCm">
+        <div class="caseClsCm" data-dojo-attach-point="divisionApCm">
           <span class="lblBoldClsCm">Graficar División</span>
           <div class="ctnParamsCm">
             <div class="lblParamCm">
@@ -149,21 +186,77 @@
             </div>
             <div class="ctnBtnParamCm">
               <button id="btnDrawLinesDvCm" class="btnParamsClsCm">
-                <i class='fas fa-map-marker-alt'></i>
+                <i class="fas fa-route"></i>
+              </button>
+            </div>
+          </div>
+          <div class="ctnParamsCm ctnTablesClsCm">
+            <table class="tableClsCm">
+              <thead>
+                <tr>
+                  <th class="center-aligned">Nro</th>
+                  <th>Nombre</th>
+                  <th class="center-aligned">Ver</th>
+                  <th class="center-aligned">Eliminar</th>
+                </tr>
+              </thead>
+              <tbody data-dojo-attach-point="bodyTbLinesDvApCm"></tbody>
+            </table>           
+          </div>
+          <div class="ctnParamsCm">
+            <div class="lblParamCm">
+              <span class="alignVCenter">
+                Clic para previsualizar la división
+              </span>
+            </div>
+            <div class="ctnBtnParamCm">
+              <button id="btnApplyDvCm" class="btnParamsClsCm">
+                <i class="far fa-object-ungroup"></i>
               </button>
             </div>
           </div>
           <div class="ctnParamsCm">
             <div class="lblParamCm">
               <span class="alignVCenter">
-                Clic para aplicar la división
+                Completar información de lotes resultantes
               </span>
-            </div>
-            <div class="ctnBtnParamCm">
-              <button id="btnApplyDvCm" class="btnParamsClsCm">
-                <i class='fas fa-map-marker-alt'></i>
-              </button>
-            </div>
+            </div>          
+          </div>
+          <div class="ctnParamsCm ctnTablesClsCm">
+            <table class="tableClsCm">
+              <thead>
+                <tr>
+                  <th class="center-aligned">Nro</th>
+                  <th>Código de lote</th>
+                  <th >Lote urbano</th>
+                  <th class="center-aligned">Ubicación</th>
+                </tr>
+              </thead>
+              <tbody data-dojo-attach-point="bodyTbDatosLoteDvApCm">
+              </tbody>
+            </table>           
+          </div>
+          <div class="ctnParamsCm">
+            <div class="lblParamCm">
+              <span class="alignVCenter">
+                Graficar predios resultantes de la división
+              </span>
+            </div>          
+          </div>
+          <div class="ctnParamsCm ctnTablesClsCm">
+            <table class="tableClsCm">
+              <thead>
+                <tr>
+                  <th class="center-aligned">Nro</th>
+                  <!-- Agregar un salto de linea a texot -->
+                  <th>Cod. Predio Municipal</th>
+                  <th >Dirección</th>
+                  <th class="center-aligned">Ubicación</th>
+                </tr>
+              </thead>
+              <tbody data-dojo-attach-point="bodyTbPrediosDvApCm">
+              </tbody>
+            </table>           
           </div>
           <div class="ctnSendDataClsCm">
             <button id="sendDataDvCm" class="btnSendClsCm">
@@ -172,7 +265,7 @@
           </div>
         </div>
         <div id="eliminacionCm" class="caseClsCm" data-dojo-attach-point="eliminacionApCm">
-          <span class="lblBoldClsCm">Eliminar predio</span>
+          <!-- <span class="lblBoldClsCm">Eliminar predio</span>
           <div class="ctnParamsCm">
             <div class="lblParamCm">
               <span class="alignVCenter">
@@ -181,13 +274,13 @@
             </div>
             <div class="ctnBtnParamCm">
               <button id="btnEliminarLoteCm" class="btnParamsClsCm">
-                <i class='fas fa-map-marker-alt'></i>
+                <span style="color: #FF5722;"><i class="far fa-trash-alt"></i></span>
               </button>
             </div>
-          </div>
+          </div> -->
           <div class="ctnSendDataClsCm">
             <button id="sendDataDtCm" class="btnSendClsCm">
-              Enviar datos
+              Inactivar el predio
             </button>
           </div>
         </div>
@@ -210,11 +303,11 @@
           </div>
           <div id="bodyPredInfoCm" class="bodyPredInfoClsCm">
             <p>${nls.labelObservDetail}</p>
-            <textarea></textarea>
+            <textarea data-dojo-attach-point="textAreaObsApCm"></textarea>
             <p>${nls.labelCapture}</p>
             <div class="ctnUploadImgClsCm">
               <div class="imgUploadClsCm">
-                <input type="file" />
+                <input type="file" id="imgUploadCm" accept="image/*" data-dojo-attach-point="imgUploadApCm"/>
                 <i class='fas fa-camera'></i>
               </div>
               <div class="thumbnailClsCm">
@@ -226,9 +319,37 @@
         <div></div>
       </div>
       <div class="ctnButtonSendDataObsClsCm">
-        <button id="sendDataObsGrCm" class="sendDataGrClsCm">
+        <button id="sendDataObsGrCm" class="btnSendClsCm">
           ${nls.labelSendObsData}
         </button>
+      </div>
+    </div>
+    <div class="resultCtnClsCm mainFormsClsCm" data-dojo-attach-point="resultCtnApCm">
+      <div class="backCtn">
+        <button id="backTrayResultCm" class="backTrayClsCm">
+          <i class='fas fa-angle-left'></i> ${nls.backTray}
+        </button>
+      </div>
+      <div class="detailResultCtnCls">
+        <div id="titleCaseResult" class="titleFormCm itemHeaderClsCm">
+        </div>
+        <div class="lblResultCtnCls">
+          Predios resultantes de la solicitud
+        </div>
+        <div class="ctnParamsCm ctnTablesClsCm">
+          <table class="tableClsCm">
+            <thead>
+              <tr>
+                <th class="center-aligned">Nro</th>
+                <th>${nls.columCPM}</th>
+                <th >Dirección</th>
+                <th class="center-aligned">Ubicación</th>
+              </tr>
+            </thead>
+            <tbody data-dojo-attach-point="bodyTbResultsApCm">
+            </tbody>
+          </table>           
+        </div>
       </div>
     </div>
   </div>

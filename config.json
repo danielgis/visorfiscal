@@ -18,16 +18,16 @@
       "useLogo": false
     },
     "customStyles": {
-      "mainBackgroundColor": "#181824"
+      "mainBackgroundColor": "#000000"
     }
   },
   "portalUrl": "https://ws.mineco.gob.pe/portaldf",
   "appId": "",
   "authorizedCrossOriginDomains": [],
-  "title": "Actualizacion cartografica",
-  "subtitle": "with ArcGIS Web AppBuilder",
+  "title": "Mantenimiento Cartográfico",
+  "subtitle": "",
   "keepAppState": true,
-  "logo": "images/app-logo.png",
+  "logo": "images/logo.png",
   "geometryService": "https://utility.arcgisonline.com/arcgis/rest/services/Geometry/GeometryServer",
   "links": [],
   "widgetOnScreen": {
@@ -93,7 +93,8 @@
         "uri": "widgets/CartoMaintenanceWgt/Widget",
         "config": "configs/CartoMaintenanceWgt/config__5.json",
         "label": "Bandeja de actualizaciones",
-        "openAtStart": true
+        "openAtStart": true,
+        "icon": "configs\\CartoMaintenanceWgt\\icon__5.png"
       },
       {
         "position": {
@@ -335,5 +336,7 @@
   "dataSource": {
     "dataSources": {},
     "settings": {}
-  }
+  },
+  "logoAlt": "",
+  "logoLink": ""
 }

@@ -182,6 +182,7 @@ var ie = (function() {
 
       dojoConfig.aliases = [
         ['turf', 'https://unpkg.com/@turf/turf@6/turf.min.js'],
+        ['xlsx', 'https://unpkg.com/xlsx@0.17.2/dist/xlsx.full.min.js']
         // ['regression', window.path + 'libs/regression/regression.min.js'],
         // ['dd3', 'https://d3js.org/d3.v4.min.js'],
         // ['html2canvas', 'libs/html2canvas/html2canvas.min.js']

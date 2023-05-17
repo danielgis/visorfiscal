@@ -100,6 +100,7 @@
   width: 120px;
   height: 30px;
   color: white;
+  cursor: pointer;
 }
 
 /* Table Tray */
@@ -225,15 +226,15 @@
   text-align: right;
 }
 
-#titleCaseCm{
+.titleFormCm{
   display: flex;
 }
-#titleCaseCm span {
+.titleFormCm span {
   /* align-self: center; */
   font-weight: bold;
   font-size: 18px;
 }
-#titleCaseCm:hover{
+.titleFormCm:hover{
   cursor: pointer;
   color: var(--blueCm)
 }
@@ -410,7 +411,9 @@
 }
 
 .btnParamsClsCm{
-  border: none;
+  border: solid 1px #ccc;
+  border-radius: 3px;
+  /* border: none; */
   background-color: inherit;
   width: 30px;
   height: 20px;
@@ -569,6 +572,7 @@ input[type='file']{
 
 #sendDataObsGrCm{
   align-self: end;
+  cursor: pointer;
 }
 
 
@@ -583,12 +587,64 @@ input[type='file']{
   width: 48%;
 }
 
-/* .inputInfoClsCm{
-  padding: 0;
-  width: 100%;
-  border: 1px solid var(--grayCm);
-  padding: 5px;
-  border-radius: 5px;
-  outline: none;
-  background: var(--gray2Cm);
+.ctnTablesClsCm{
+  margin-top: 10px;
+  margin-bottom: 10px;  
+}
+
+/* #CtnlinesDvCm{
+  margin-top: 10px;
+  margin-bottom: 10px;
 } */
+
+.tableClsCm{
+  border-collapse: collapse;
+  width: 100%; 
+}
+
+/* #tbLinesDvCm {
+  border-collapse: collapse;
+  width: 100%; 
+} */
+
+.tableClsCm td, .tableClsCm th {
+  border-bottom: 1px solid #ddd;
+  padding: 5px;
+}
+
+.tableClsCm th{
+  font-weight: bold;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: var(--blueCm);
+  color: white;
+  position: sticky;
+  top: 0;
+}
+
+.center-aligned{
+  text-align: center;
+}
+
+.locationLabelLoteDvCls{
+  cursor: pointer;
+}
+
+
+.detailResultCtnCls{
+  padding: 15px 12px 12px 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.lblResultCtnCls{
+  margin-top: 20px;
+}
+
+#titleCaseResult{
+  width: 100%;
+}
+
+.zoomPredioResultClsCm{
+  cursor: pointer;
+}
