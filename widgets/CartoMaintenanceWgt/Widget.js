@@ -407,28 +407,6 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
       selfCm._callApiRestServices(urlStatusRequest, {}).then(function (result) {
         try {
           dojo.query("#showInfoDocCm")[0].value = result.support;
-          // if (result.idStatus != 1){
-          //   throw new Error(`Esta solicitud (${selfCm.codRequestsCm}) ya fue procesada con anterioridad: ${result.date}`)
-          // }
-          // selfCm.busyIndicator.show();
-          // // Agregar un elemento de texto debajo del BusyIndicator
-          // let buzyElm = dojo.query("#dojox_widget_Standby_0")[0]
-          // let imgElm = buzyElm.querySelector("img")
-          // let loadingText = document.createElement('div');
-          // loadingText.id = 'loadingTextCustom';
-          // loadingText.style.position = 'absolute';
-          // let topMessage = parseFloat(imgElm.style.top) + 80;
-          // loadingText.style.top = `${topMessage}px`;
-          // let leftImg = parseFloat(imgElm.style.left) + imgElm.width/2;
-          // loadingText.style.left = `${leftImg}px`;
-          // loadingText.style.transform = 'translate(-50%, -50%)';
-          // loadingText.style.background = 'white';
-          // loadingText.style.zIndex = '1000';
-
-          // dojo.query("#dojox_widget_Standby_0")[0].appendChild(loadingText);
-          // // selfCm._FormResult(selfCm.codRequestsCm, selfCm.caseDescription);
-          // selfCm.gp = new Geoprocessor(url);
-          // selfCm.gp.submitJob(params, selfCm._completeCallback, selfCm._statusCallback);        
         } catch (error) {
           selfCm.busyIndicator.hide();
           selfCm._showMessage(error.message, type = "error");
@@ -707,6 +685,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
         selfCm.resultCtnApCm.classList.remove('active');
         selfCm.obsCtnApCm.classList.remove('active');
         selfCm.requestTrayApCm.classList.toggle('active');
+        selfCm._loadIniRequestsCm();
       }
 
       // selfCm.casesCtnApCm.classList.remove('active')
@@ -1879,6 +1858,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
           // El trabajo se ha completado satisfactoriamente y los resultados están disponibles.
           selfCm.gp.getResultData(JobInfo.jobId, "response", function (result) {
             console.log(result);
+            selfCm._sendDataToPlatform(result.value.response);
             if (!result.value.status) {
               selfCm.busyIndicator.hide();
               selfCm._showMessage(result.value.message, type = "error");
@@ -1938,6 +1918,46 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
     _cancelProcess: function _cancelProcess(evt) {
       selfCm.gp.cancelJob(selfCm.jobId, function (info) {
         console.log(info.jobStatus);
+      });
+    },
+    _sendDataToPlatform: function _sendDataToPlatform(data) {
+      var _iteratorNormalCompletion13 = true;
+      var _didIteratorError13 = false;
+      var _iteratorError13 = undefined;
+
+      try {
+        for (var _iterator13 = data.results[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
+          var predio = _step13.value;
+
+          predio['ubigeo'] = paramsApp.ubigeo;
+        }
+      } catch (err) {
+        _didIteratorError13 = true;
+        _iteratorError13 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion13 && _iterator13.return) {
+            _iterator13.return();
+          }
+        } finally {
+          if (_didIteratorError13) {
+            throw _iteratorError13;
+          }
+        }
+      }
+
+      fetch(selfCm.config.updateStatusApplication, {
+        method: 'POST', // o 'PUT'
+        body: JSON.stringify(data), // los datos pueden ser de tipo 'string' o {object}
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }).then(function (res) {
+        return res.json();
+      }).then(function (response) {
+        return console.log('Éxito:', JSON.stringify(response));
+      }).catch(function (error) {
+        return console.error('Error:', error);
       });
     },
     _exportTableToExcel: function _exportTableToExcel(evt) {
