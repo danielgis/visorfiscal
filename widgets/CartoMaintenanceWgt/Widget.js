@@ -131,7 +131,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
   var _COD_PRE_FIELD = "COD_PRE";
   var _COD_LOTE_FIELD = "COD_LOTE";
 
-  var samplePdf = "https://www.africau.edu/images/default/sample.pdf";
+  // const samplePdf = "https://www.africau.edu/images/default/sample.pdf"
 
   var toolbarCm = void 0;
 
@@ -442,9 +442,11 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
         // comentar esta linea cuando se pase a produccion
         // response = dataRequestsToAttendCm2
         // ----------------------------------------------
+        response = response['results'].slice(20);
+        console.log(response);
         selfCm.currentTabActive = evt.target.id;
         var estado = iconByState[evt.target.id].desc;
-        var data = selfCm._getRequestsTrayDataCm(response['results'], estado);
+        var data = selfCm._getRequestsTrayDataCm(response, estado);
         var dataHtml = data.map(function (i) {
           return '<tr>\n                                        <td>' + i.id + '</td>\n                                        <td>' + i.type + '</td>\n                                        <td>' + i.lands.map(function (lnd) {
             return lnd['cpm'];
