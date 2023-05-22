@@ -1676,7 +1676,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
             "lotes_orig": selfCm.idlotes,
             "ubigeo": paramsApp['ubigeo'],
             "lote_geom": JSON.stringify(selfCm.map.getLayer("graphicLoteCm").graphics[0].geometry.toJson()),
-            "lote_pun_geon": JSON.stringify(selfCm.map.getLayer(idGraphicPuntoLote).graphics.map(function (i) {
+            "lote_pun_geom": JSON.stringify(selfCm.map.getLayer(idGraphicPuntoLote).graphics.map(function (i) {
               return [i.geometry.x, i.geometry.y];
             })),
             "predio_geom": JSON.stringify({ 'cod_pre': selfCm.idPredioAcumulacion.split("_")[2], 'coords': selfCm.xy }),
@@ -1858,12 +1858,13 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
           // El trabajo se ha completado satisfactoriamente y los resultados están disponibles.
           selfCm.gp.getResultData(JobInfo.jobId, "response", function (result) {
             console.log(result);
-            selfCm._sendDataToPlatform(result.value.response);
             if (!result.value.status) {
               selfCm.busyIndicator.hide();
               selfCm._showMessage(result.value.message, type = "error");
               return;
             }
+
+            selfCm._sendDataToPlatform(result.value.response);
 
             switch (selfCm.case) {
               case "1":
