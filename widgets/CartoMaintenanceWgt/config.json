@@ -1,7 +1,7 @@
 {
-  "reasignacionUrl": "https://ws.mineco.gob.pe/serverdf/rest/services/geoprocesos/reasignacion_predio_2/GPServer/Reasignacion%20de%20predio",
-  "acumulacionUrl": "https://ws.mineco.gob.pe/serverdf/rest/services/geoprocesos/acumulacion_predio_8/GPServer/Acumulacion%20de%20predios",
-  "subdivisionUrl": "https://ws.mineco.gob.pe/serverdf/rest/services/geoprocesos/subdivision_predio_7/GPServer/Subdivision%20de%20predios",
+  "reasignacionUrl": "https://ws.mineco.gob.pe/serverdf/rest/services/geoprocesos/reasignacion_predio_3/GPServer/Reasignacion%20de%20predio",
+  "acumulacionUrl": "https://ws.mineco.gob.pe/serverdf/rest/services/geoprocesos/acumulacion_predio_9/GPServer/Acumulacion%20de%20predios",
+  "subdivisionUrl": "https://ws.mineco.gob.pe/serverdf/rest/services/geoprocesos/subdivision_predio_8/GPServer/Subdivision%20de%20predios",
   "inactivacionUrl": "https://ws.mineco.gob.pe/serverdf/rest/services/geoprocesos/inactivacion_predio_2/GPServer/Inactivacion%20de%20predio",
   "applicationListUrl": "https://catastro-fiscal.codtree.com/api/v1/maintenance/application",
   "landsByApplicationUrl": "https://catastro-fiscal.codtree.com/api/v1/maintenance/land/lands-by-application",

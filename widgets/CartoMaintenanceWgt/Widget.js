@@ -1,102 +1,4 @@
 define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin', "esri/toolbars/draw", "esri/toolbars/edit", "esri/graphic", "esri/symbols/SimpleFillSymbol", "esri/symbols/SimpleMarkerSymbol", "esri/symbols/SimpleLineSymbol", 'dojo/_base/Color', "esri/layers/GraphicsLayer", "esri/geometry/Point", "jimu/LayerInfos/LayerInfos", "dojo/_base/lang", "esri/layers/FeatureLayer", "esri/tasks/QueryTask", "esri/tasks/query", "jimu/WidgetManager", "esri/geometry/geometryEngine", "esri/geometry/Polyline", "esri/geometry/webMercatorUtils", "esri/tasks/Geoprocessor", 'esri/dijit/util/busyIndicator', "jimu/dijit/Message", "turf", "xlsx", "dojo/Deferred", "esri/symbols/TextSymbol", "esri/symbols/Font"], function (declare, BaseWidget, _WidgetsInTemplateMixin, Draw, Edit, Graphic, SimpleFillSymbol, SimpleMarkerSymbol, SimpleLineSymbol, Color, GraphicsLayer, Point, LayerInfos, lang, FeatureLayer, QueryTask, Query, WidgetManager, geometryEngine, Polyline, webMercatorUtils, Geoprocessor, BusyIndicator, Message, turf, XLSX, Deferred, TextSymbol, Font) {
-  // import 'core-js/stable'
-  // import 'regenerator-runtime/runtime'
-
-
-  // const dataRequestsToAttendCm = [
-  //   {"case":"Reasignar","caseId":1,"cod_pre":"01-34-0017","estado":"por_atender","fec_solicitud":"10/11/2022", "id_solicitud":1},
-  //   {"case":"Acumulación","caseId":2,"cod_pre":"01-34-0011,01-34-0012","estado":"por_atender","fec_solicitud":"10/11/2022","id_solicitud":2},
-  //   {"case":"División","caseId":3,"cod_pre":"01-34-0010","estado":"por_atender","fec_solicitud":"10/11/2022","id_solicitud":3},
-  //   {"case":"Inactivar","caseId":5,"cod_pre":"01-23-0036","estado":"por_atender","fec_solicitud":"10/11/2022","id_solicitud":5},
-  //   {"case":"Reasignar","caseId":1,"cod_pre":"01-38-0010","estado":"por_atender","fec_solicitud":"10/11/2022","id_solicitud":6},
-  //   {"case":"Acumulación","caseId":2,"cod_pre":"01-58-0004,01-58-0003","estado":"por_atender","fec_solicitud":"10/11/2022","id_solicitud":7},
-  //   {"case":"División","caseId":3,"cod_pre":"01-12-0028","estado":"por_atender","fec_solicitud":"10/11/2022","id_solicitud":11},
-  //   {"case":"Fusión","caseId":2,"cod_pre":"1376","estado":"obaservado","fec_solicitud":"10/11/2022","id_solicitud":8},
-  //   {"case":"División","caseId":3,"cod_pre":"1376","estado":"observado","fec_solicitud":"10/11/2022","id_solicitud":9},
-  //   {"case":"Inactivar","caseId":4,"cod_pre":"1376","estado":"atendido","fec_solicitud":"10/11/2022","id_solicitud":10}
-  //   ]
-
-  // const dataRequestsToAttendCm2 = {
-  // 	"count":1,
-  // 	"next":null,
-  // 	"previous":null,
-  // 	"results":[
-  // 		{"type":"Reasignar","idType":1,"lands":[{"cup":"01-34-0017"}],"status":"Por atender","idStatus":1,"date":"2023-05-14T22:38:35.742809","id":1},
-  // 		{"type":"Acumulación","idType":2,"lands":[{"cup":"01-34-0011"},{"cup":"01-34-0012"}],"status":"Por atender","idStatus":1,"date":"2023-05-14T22:38:35.742809","id":2},
-  // 		{"type":"División","idType":3,"lands":[{"cup":"01-34-0010"}],"status":"Por atender","idStatus":1,"date":"2023-05-14T22:38:35.742809","id":3},
-  // 		{"type":"Inactivar","idType":5,"lands":[{"cup":"01-23-0036"}],"status":"Por atender","idStatus":1,"date":"2023-05-14T22:38:35.742809","id":5},
-  // 		{"type":"Reasignar","idType":1,"lands":[{"cup":"01-38-0010"}],"status":"Por atender","idStatus":1,"date":"2023-05-14T22:38:35.742809","id":6},
-  // 		{"type":"Acumulación","idType":2,"lands":[{"cup":"01-58-0004"},{"cup":"01-58-0003"}],"status":"Por atender","idStatus":1,"date":"2023-05-14T22:38:35.742809","id":7},
-  // 		{"type":"División","idType":3,"lands":[{"cup":"01-12-0028"}],"status":"Por atender","idStatus":1,"date":"2023-05-14T22:38:35.742809","id":11},
-  // 		{"type":"Fusión","idType":2,"lands":[{"cup":"1376"}],"status":"Observado","idStatus":3,"date":"2023-05-14T22:38:35.742809","id":8},
-  // 		{"type":"División","idType":3,"lands":[{"cup":"1376"}],"status":"Observado","idStatus":3,"date":"2023-05-14T22:38:35.742809","id":9},
-  // 		{"type":"Inactivar","idType":4,"lands":[{"cup":"1376"}],"status":"Atendido","idStatus":2,"date":"2023-05-14T22:38:35.742809","id":10}
-  // 	]
-  // }
-
-
-  // const dataByRequest = {
-  //   "1": [{"cod_pre": "01-34-0017", "x": -79.739827, "y": -6.643564, "direccion": "Av. Los Jazmines 123", "num_alt": 567, "sec_eje": "Sección 1", "cod_cuc": "ABC123"}],
-  //   "2": [
-  //     {"cod_pre": "01-34-0011","x": -67.89,"y": -12,"direccion": "Calle Las Rosas 456","num_alt": 789,"sec_eje": "Sección 2","cod_cuc": "DEF456"}, 
-  //     { "cod_pre": "01-34-0012", "x": 345.67, "y": 89.01, "direccion": "Jr. Los Girasoles 789", "num_alt": 234, "sec_eje": "Sección 3", "cod_cuc": "GHI789"},
-  //   ],
-  //   "3": [{"cod_pre": "01-34-0010","x": -67.89,"y": -12,"direccion": "Calle Las Rosas 456","num_alt": 789,"sec_eje": "Sección 2", "cod_cuc": "DEF456"}],
-  //   "5": [{"cod_pre": "01-23-0036","x": -67.89,"y": -12,"direccion": "Jr. Los Girasoles 789","num_alt": 234,"sec_eje": "Sección 3","cod_cuc": "GHI789"}],
-  //   "6": [{"cod_pre": "01-38-0010", "x": -79.739827, "y": -6.643564, "direccion": "Av. Los Jazmines 123", "num_alt": 567, "sec_eje": "Sección 1", "cod_cuc": "ABC123"}],
-  //   "7": [
-  //     {"cod_pre": "01-58-0004","x": -67.89,"y": -12,"direccion": "Calle Las Rosas 456","num_alt": 789,"sec_eje": "Sección 2","cod_cuc": "DEF456"}, 
-  //     { "cod_pre": "01-58-0003", "x": 345.67, "y": 89.01, "direccion": "Jr. Los Girasoles 789", "num_alt": 234, "sec_eje": "Sección 3", "cod_cuc": "GHI789"},
-  //   ],
-  //   "11": [{"cod_pre": "01-12-0028","x": -67.89,"y": -12,"direccion": "Calle Las Rosas 456","num_alt": 789,"sec_eje": "Sección 2", "cod_cuc": "DEF456"}],
-  // }
-
-  // const dataByRequest2 = {
-  //   "1": [
-  //   	{"cpm": "01-34-0017", "streetName": "Av. Los Jazmines 123", "streetNameAlt": 567, "secEjec": "Sección 1", "codCuc": "ABC123"}
-  //   ],
-  //   "2": [
-  //     {"cpm": "01-34-0011", "streetName": "Calle Las Rosas 456","streetNameAlt": 789,"secEjec": "Sección 2","codCuc": "DEF456"}, 
-  //     { "cpm": "01-34-0012", "streetName": "Jr. Los Girasoles 789", "streetNameAlt": 234, "secEjec": "Sección 3", "codCuc": "GHI789"},
-  //   ],
-  //   "3": [
-  //   	{"cpm": "01-34-0010", "streetName": "Calle Las Rosas 456","streetNameAlt": 789,"secEjec": "Sección 2", "codCuc": "DEF456"}
-  //   ],
-  //   "5": [
-  //   	{"cpm": "01-23-0036", "streetName": "Jr. Los Girasoles 789","streetNameAlt": 234,"secEjec": "Sección 3","codCuc": "GHI789"}
-  //   ],
-  //   "6": [
-  //   	{"cpm": "01-38-0010", "streetName": "Av. Los Jazmines 123", "streetNameAlt": 567, "secEjec": "Sección 1", "codCuc": "ABC123"}
-  //   ],
-  //   "7": [
-  //     {"cpm": "01-58-0004", "streetName": "Calle Las Rosas 456","streetNameAlt": 789,"secEjec": "Sección 2","codCuc": "DEF456"}, 
-  //     { "cpm": "01-58-0003", "streetName": "Jr. Los Girasoles 789", "streetNameAlt": 234, "secEjec": "Sección 3", "codCuc": "GHI789"},
-  //   ],
-  //   "11": [
-  //   	{"cpm": "01-12-0028", "streetName": "Calle Las Rosas 456","streetNameAlt": 789,"secEjec": "Sección 2", "codCuc": "DEF456"}
-  //   ],
-  // }
-
-  // const responseDivision = {
-  //   "6": [
-  //     {"cod_pre": "prueba-69", "direccion": "Calle Las Rosas 456 con av. Argentina 123"},
-  //     {"cod_pre": "prueba-70", "direccion": "Calle Las Rosas 457 con av. Argentina 123"},
-  //   ],
-  //   "11": [
-  //     {"cod_pre": "prueba-71", "direccion": "Calle Las Rosas 456 con av. Argentina 123"},
-  //     {"cod_pre": "prueba-72", "direccion": "Calle Las Rosas 457 con av. Argentina 123"},
-  //   ],
-  //   "2": [
-  //     {"cod_pre": "prueba-73", "direccion": "Calle Las Rosas 456 con av. Argentina 123"},
-  //   ],
-  //   "1": [
-  //     {"cod_pre": "01-34-0017", "direccion": "Calle Las Rosas 456 con av. Argentina 123"},
-  //   ],
-  //   "5":[
-  //     {"cod_pre": "01-23-0036", "direccion": "Calle Las Rosas 456 con av. Argentina 123"},
-  //   ]
-  // }
-
 
   var requestToAttendState = "por_atender";
   var requestsObservedState = "observado";
@@ -131,8 +33,6 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
   var _COD_PRE_FIELD = "COD_PRE";
   var _COD_LOTE_FIELD = "COD_LOTE";
 
-  // const samplePdf = "https://www.africau.edu/images/default/sample.pdf"
-
   var toolbarCm = void 0;
 
   var params = new URLSearchParams(window.location.search);
@@ -149,7 +49,6 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
       paramsApp[key] = params.get(key);
     }
 
-    // console.log(paramsApp)
     // Styles
   } catch (err) {
     _didIteratorError = true;
@@ -241,7 +140,8 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
     editToolbar: null,
     queryRequests: {
       ubigeo: paramsApp['ubigeo'],
-      limit: 1000
+      limit: 1000000,
+      ordering: "-date"
     },
 
     postCreate: function postCreate() {
@@ -318,7 +218,6 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
       return deferred.promise;
     },
     _filterByDistrictCm: function _filterByDistrictCm() {
-      // let queryUbigeo = `${_UBIGEO_FIELD} = '${paramsApp['ubigeo']}'`
       var queryPredios = selfCm.layersMap.getLayerInfoById(idLyrCfPredios).getFilter();
       queryPredios = queryPredios ? queryPredios + " AND " + selfCm.queryUbigeo : selfCm.queryUbigeo;
       selfCm.layersMap.getLayerInfoById(idLyrCfPredios).setFilter(queryPredios);
@@ -377,9 +276,6 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
     },
     _getRequestsTrayDataCm: function _getRequestsTrayDataCm(responseData, state) {
       // Reemplazar todo el metodo para capturar datos de servicio
-      // let response = selfCm._fetchServices(selfCm.config.applicationListUrl, {'ubigeo': paramsApp['ubigeo']})
-      // let response = selfCm._fetchServices(selfCm.config.applicationListUrl, {userId: 1})
-      // console.log(response)
       var data = responseData.filter(function (i) {
         return i.status == state;
       });
@@ -420,8 +316,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
         // comentar esta linea cuando se pase a produccion
         // response = dataRequestsToAttendCm2
         // ----------------------------------------------
-        response = response['results'].slice(20);
-        console.log(response);
+        response = response['results'];
         selfCm.currentTabActive = evt.target.id;
         var estado = iconByState[evt.target.id].desc;
         var data = selfCm._getRequestsTrayDataCm(response, estado);
@@ -454,7 +349,6 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
     },
     _zoomToPredSelected: function _zoomToPredSelected(cod_pred) {
       selfCm._removeLayerGraphic(idGraphicPredioSelectedCm);
-      // let cod_pred = evt.currentTarget.children[0].innerHTML.split(': ')[1]
       var prediosLayer = selfCm.layersMap.getLayerInfoById(idLyrCfPredios);
       var propertyLayer = new FeatureLayer(prediosLayer.getUrl(), {
         mode: FeatureLayer.MODE_ONDEMAND,
@@ -463,9 +357,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
       // crear una consulta para seleccionar la fila deseada
       var query = new Query();
       query.where = _UBIGEO_FIELD + ' = \'' + paramsApp['ubigeo'] + '\' and ' + _COD_PRE_FIELD + ' = \'' + cod_pred + '\'';
-      // console.log(query.where)
 
-      // propertyLayer.setSelectionSymbol(symbolPredioSelected);
       // seleccionar la fila
       propertyLayer.selectFeatures(query, FeatureLayer.SELECTION_NEW, function (results) {
         var featureSelected = new GraphicsLayer({
@@ -615,8 +507,6 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
         selfCm.caseDescription = rowList[1];
         dojo.query('#titleCaseCm')[0].innerHTML = '<span>' + selfCm.caseDescription + ' <span class="fa fa-search" style="font-size: 15px"></span></span>';
         selfCm._populateFormsByPredio(selfCm.codRequestsCm);
-        // dojo.query('.codPredClsCm')[0].innerHTML = `<span class="alignVCenter">Predios: ${rowList[2]}</span>`
-        // dojo.query('.headPredInfoClsCm')[0].innerHTML = `<span class="alignVCenter">Predio: ${rowList[2]}</span>`
 
         selfCm.case = evt.currentTarget.value;
         switch (selfCm.case) {
@@ -630,9 +520,6 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
             selfCm.divisionApCm.classList.toggle('active');
             break;
           case "4":
-            selfCm.actGeomApCm.classList.toggle('active');
-            break;
-          case "5":
             selfCm.eliminacionApCm.classList.toggle('active');
             break;
           default:
@@ -656,11 +543,6 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
         selfCm.bodyTbLinesDvApCm.innerHTML = '';
         // selfCm.CtnPrediosDvApCm.style.display = 'none'
         selfCm.bodyTbPrediosDvApCm.innerHTML = '';
-        // selfCm.map.enableSnapping({
-        //   snapPoint: false,
-        //   snapLine: false,
-        //   snapPolygon: false
-        // });
 
         dojo.query(".caseClsCm").removeClass("active");
         // remove all graphics layer if exist
@@ -672,7 +554,6 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
         selfCm._removeLayerGraphic(idGraphicLabelCodLote);
         selfCm.bodyTbDatosLoteDvApCm.innerHTML = '';
 
-        // selfCm._removeLayerGraphic(idGraphicLineaDivision)
         graphicLayerLineaDivision.clear();
         graphicLayerLabelLineaDivision.clear();
         graphicLayerPredioByDivison.clear();
@@ -687,14 +568,8 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
         selfCm.requestTrayApCm.classList.toggle('active');
         selfCm._loadIniRequestsCm();
       }
-
-      // selfCm.casesCtnApCm.classList.remove('active')
-      // selfCm.resultCtnApCm.classList.remove('active')
-      // selfCm.obsCtnApCm.classList.remove('active')
-      // selfCm.requestTrayApCm.classList.toggle('active')
     },
     _openFormObs: function _openFormObs() {
-      // console.log('aqui')
       selfCm.textAreaObsApCm.value = '';
       var imageDiv = dojo.query(".thumbnailClsCm")[0];
       imageDiv.style.backgroundImage = "none";
@@ -1947,6 +1822,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
         }
       }
 
+      data['idType'] = parseInt(selfCm.case);
       fetch(selfCm.config.updateStatusApplication, {
         method: 'POST', // o 'PUT'
         body: JSON.stringify(data), // los datos pueden ser de tipo 'string' o {object}
@@ -2075,8 +1951,14 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
         } else {
           selfCm.queryRequests['cpm'] = evt.target.value;
         }
-        dojo.query(".tablinksCm")[0].click();
+        dojo.query(".tablinksCm.active")[0].click();
       }
+    },
+    _sortedByDate: function _sortedByDate(evt) {
+      var columnOrder = evt.currentTarget.dataset.val;
+      evt.currentTarget.dataset.val = columnOrder.includes('-') ? columnOrder.replace('-', '') : '-' + columnOrder;
+      selfCm.queryRequests['ordering'] = evt.currentTarget.dataset.val;
+      dojo.query(".tablinksCm.active")[0].click();
     },
     onOpen: function onOpen() {
       console.log('CartoMaintenanceWgt::onOpen');
@@ -2109,6 +1991,8 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
       dojo.query('#imgUploadCm').on('change', this._uploadImagenObs);
       dojo.query('#sendDataObsGrCm').on('click', this._sendObservation);
       dojo.query('#searchTbxCm').on("keyup", this._searchRequestByCodPred);
+      dojo.query('.columnDateClsCm').on("click", this._sortedByDate);
+      // dojo.query('.columnCaseClsCm').on("click", this._sortedByDate)
       this._loadIniRequestsCm();
 
       selfCm.map.addLayer(graphicLayerLabelLineaDivision);

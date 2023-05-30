@@ -648,3 +648,7 @@ input[type='file']{
 .zoomPredioResultClsCm{
   cursor: pointer;
 }
+
+.columnDateClsCm, .columnCaseClsCm{
+  cursor: pointer;
+}
