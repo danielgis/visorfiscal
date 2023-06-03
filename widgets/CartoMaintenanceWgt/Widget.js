@@ -120,6 +120,10 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
     id: idGraphicPredioByDivison
   });
 
+  var fontAwesome = document.createElement('script');
+  fontAwesome.src = 'https://use.fontawesome.com/releases/v5.3.1/js/all.js';
+  document.head.appendChild(fontAwesome);
+
   // To create a widget, you need to derive from BaseWidget.
   return declare([BaseWidget], {
 

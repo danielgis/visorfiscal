@@ -1489,8 +1489,8 @@ widget:jimu-w
   /* overflow-x: auto; */
   overflow-y: auto;
   position: relative;
-  /* padding: 14px 14px 14px 14px; */
-  padding: 0;
+  padding: 14px 14px 14px 14px;
+  /* padding: 0; */
   background-color: white;
 }
 .jimu-ismobile .jimu-widget-frame.jimu-container{
