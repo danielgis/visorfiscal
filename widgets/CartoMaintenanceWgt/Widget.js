@@ -395,7 +395,6 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
       var query = new Query();
 
       query.where = _UBIGEO_FIELD + ' = \'' + paramsApp['ubigeo'] + '\' and ' + _COD_PRE_FIELD + ' in (\'' + cod_pre.split(',').join("', '") + '\')';
-      // console.log(query.where)
       // fields return
       query.outFields = [_ID_LOTE_P_FIELD, _COD_MZN_FIELD, _COD_SECT_FIELD];
       query.returnGeometry = false;
@@ -499,9 +498,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
         selfCm.codigosPredios = response['results'].map(function (i) {
           return i.cpm;
         }).join(',');
-        // console.log(selfCm.codigosPredios)
         selfCm._zoomExtentToLote(selfCm.codigosPredios);
-        // selfCm._zoomHomeRequests()
       });
     },
     _openFormCase: function _openFormCase(evt) {
@@ -1030,7 +1027,6 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
       });
       graphic[0].symbol.text = evt.currentTarget.innerText;
       graphicLayerLabelLineaDivision.refresh();
-      // console.log(evt.currentTarget.innerText);
     },
     _populateTablePredio: function _populateTablePredio(bodyTable, drawFunction) {
       // obtener del servicio los predios resultantes de la solicitud
@@ -1339,7 +1335,6 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
           return false;
         }
 
-        // console.log(geomLoteDivided)
         // iterar sobre los graficos de la capa de division y agregar cada uno a graphicLayerLoteDivision
         var _iteratorNormalCompletion8 = true;
         var _didIteratorError8 = false;
@@ -1374,7 +1369,6 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
         var urlLotes = selfCm.layersMap.getLayerInfoById(idLyrCfLotes).getUrl();
         selfCm._etiquetasCodLote(urlLotes, _COD_LOTE_FIELD, selfCm.arancel, "max", geomLoteDivided, selfCm.bodyTbDatosLoteDvApCm);
 
-        // console.log(graphicLayerLoteDivision._extent)
         selfCm.map.reorderLayer(graphicLayerLoteDivision, selfCm.map.graphicsLayerIds.indexOf(graphicLayerLabelLineaDivision.id));
         selfCm.map.setExtent(results.features[0].geometry.getExtent().expand(1.5), true);
       }).then(function () {
@@ -1534,11 +1528,9 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
             "geometry": selfCm.xy,
             "user": paramsApp['username'],
             "id_solicitud": selfCm.codRequestsCm
-          };
-          console.log(_params);
 
-          // revisar si alguna propiedad tiene valor nulo o indefinido
-          for (var key in _params) {
+            // revisar si alguna propiedad tiene valor nulo o indefinido
+          };for (var key in _params) {
             if (_params[key] == null || _params[key] == undefined) {
               selfCm._showMessage('Debe especificar el valor de ' + key, type = "error");
               return;
@@ -1565,11 +1557,9 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
             "atributos": JSON.stringify({ 'cod_lote': labelCodLotesLayer.symbol.text, 'lot_urb': labelCodLotesLayer.attributes.lot_urb }),
             "user": paramsApp['username'],
             "id_solicitud": selfCm.codRequestsCm
-          };
 
-          console.log(_params2);
-          // revisar si alguna propiedad tiene valor nulo o indefinido
-          for (var key in _params2) {
+            // revisar si alguna propiedad tiene valor nulo o indefinido
+          };for (var key in _params2) {
             if (_params2[key] == null || _params2[key] == undefined) {
               selfCm._showMessage('Debe especificar el valor de ' + key, type = "error");
               return;
@@ -1640,10 +1630,8 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
             })),
             "user": paramsApp['username'],
             "id_solicitud": selfCm.codRequestsCm
-          };
-          console.log(_params3);
-          // revisar si alguna propiedad tiene valor nulo o indefinido
-          for (var key in _params3) {
+            // revisar si alguna propiedad tiene valor nulo o indefinido
+          };for (var key in _params3) {
             if (_params3[key] == null || _params3[key] == undefined) {
               selfCm._showMessage('Debe especificar el valor de ' + key, type = "error");
               return;
@@ -1664,10 +1652,8 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
             "cod_pred": selfCm.codigosPredios,
             "user": paramsApp['username'],
             "id_solicitud": selfCm.codRequestsCm
-          };
-          console.log(_params4);
-          // revisar si alguna propiedad tiene valor nulo o indefinido
-          for (var key in _params4) {
+            // revisar si alguna propiedad tiene valor nulo o indefinido
+          };for (var key in _params4) {
             if (_params4[key] == null || _params4[key] == undefined) {
               selfCm._showMessage('Debe especificar el valor de ' + key, type = "error");
               return;
@@ -1719,7 +1705,6 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
       var textMessage = JobInfo.messages.map(function (message) {
         return message.description;
       });
-      // console.log(textMessage.slice(-1)[0] ? textMessage.slice(-1)[0] : '')
       try {
         dojo.query("#loadingTextCustom")[0].textContent = textMessage.slice(-1)[0] ? textMessage.slice(-1)[0] : '';
       } catch (error) {
@@ -1739,7 +1724,6 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
         case "esriJobSucceeded":
           // El trabajo se ha completado satisfactoriamente y los resultados están disponibles.
           selfCm.gp.getResultData(JobInfo.jobId, "response", function (result) {
-            console.log(result);
             if (!result.value.status) {
               selfCm.busyIndicator.hide();
               selfCm._showMessage(result.value.message, type = "error");
@@ -1758,6 +1742,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
                 selfCm._removeLayerGraphic(idGraphicPuntoLote);
                 selfCm._removeLayerGraphic(idGraphicFrenteLote);
                 selfCm._removeLayerGraphic(idGraphicLabelCodLote);
+                break;
               case "3":
                 graphicLayerPredioByDivison.clear();
                 graphicLayerLineaDivision.clear();
@@ -1767,12 +1752,21 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
                 selfCm._removeLayerGraphic(idGraphicPuntoLote);
                 selfCm._removeLayerGraphic(idGraphicFrenteLote);
                 selfCm._removeLayerGraphic(idGraphicLabelCodLote);
+                break;
+              case "4":
+                // dojo.query(".tablinksCm.active")[0].click();
+                // selfCm._loadIniRequestsCm()
+                break;
               default:
                 break;
             }
             selfCm.map.getLayer(idLyrCatastroFiscal).setVisibility(false);
             selfCm.map.getLayer(idLyrCatastroFiscal).setVisibility(true);
-            selfCm._FormResult(selfCm.codRequestsCm, selfCm.caseDescription);
+            if (selfCm.case == "4") {
+              dojo.query(".backTrayClsCm")[0].click();
+            } else {
+              selfCm._FormResult(selfCm.codRequestsCm, selfCm.caseDescription);
+            }
             // Codigo para mostrar la ventana de resultados
 
           });
@@ -1839,9 +1833,11 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
       }).then(function (res) {
         return res.json();
       }).then(function (response) {
-        return console.log('Éxito:', JSON.stringify(response));
-      }).catch(function (error) {
-        return console.error('Error:', error);
+        return selfCm._showMessage('El proceso se completó satisfactoriamente.');
+      })
+      // .catch(error => console.error('Error:', error));
+      .catch(function (error) {
+        return selfCm._showMessage(error, type = "error");
       });
     },
     _exportTableToExcel: function _exportTableToExcel(evt) {
@@ -1970,7 +1966,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
     onOpen: function onOpen() {
       console.log('CartoMaintenanceWgt::onOpen');
       var panel = this.getPanel();
-      panel.position.height = 750;
+      panel.position.height = 700;
       panel.setPosition(panel.position);
       panel.panelManager.normalizePanel(panel);
 
