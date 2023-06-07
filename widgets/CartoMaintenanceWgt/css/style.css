@@ -199,7 +199,7 @@
 .backTrayClsCm, .backRequestsClsCm{
   background-color: inherit;
   border: none;
-  color: #0090F8;
+  color: var(--blueCm);
   height: 30px;
 }
 .backTrayClsCm:hover{
@@ -656,4 +656,9 @@ input[type='file']{
 
 .columnDateClsCm, .columnCaseClsCm{
   cursor: pointer;
+}
+
+.activeButton{
+  color: var(--blueCm);
+  border-color: var(--blueCm);
 }

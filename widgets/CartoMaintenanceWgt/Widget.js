@@ -19,7 +19,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
   var idLyrCfParques = "CARTO_FISCAL_6806_7";
   var idLyrCfManzana = "CARTO_FISCAL_6806_8";
   var idLyrCfSector = "CARTO_FISCAL_6806_9";
-  var idLyrActpuntoimg = "ACTUALIZACION_DE_PUNTO_IMG_1890";
+  // const idLyrActpuntoimg = "ACTUALIZACION_DE_PUNTO_IMG_1890"
   var idLyrDistricts = "limites_nacional_1821_2";
 
   var iconByState = {
@@ -145,6 +145,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
     idPredioDivision: '',
     idPredioAcumulacion: '',
     editToolbar: null,
+    idButtonDrawActive: '',
     queryRequests: {
       ubigeo: paramsApp['ubigeo'],
       limit: 1000000,
@@ -237,7 +238,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
       selfCm.layersMap.getLayerInfoById(idLyrCfParques).setFilter(selfCm.queryUbigeo);
       selfCm.layersMap.getLayerInfoById(idLyrCfManzana).setFilter(selfCm.queryUbigeo);
       selfCm.layersMap.getLayerInfoById(idLyrCfSector).setFilter(selfCm.queryUbigeo);
-      selfCm.layersMap.getLayerInfoById(idLyrActpuntoimg).setFilter(selfCm.queryUbigeo);
+      // selfCm.layersMap.getLayerInfoById(idLyrActpuntoimg).setFilter(selfCm.queryUbigeo)
     },
     _startExtentByDistrictCm: function _startExtentByDistrictCm() {
       var query = new Query();
@@ -367,9 +368,14 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
 
       // seleccionar la fila
       propertyLayer.selectFeatures(query, FeatureLayer.SELECTION_NEW, function (results) {
+        if (results.length == 0) {
+          selfCm._showMessage("No se encontró el predio seleccionado", type = "error");
+          return;
+        }
         var featureSelected = new GraphicsLayer({
           id: idGraphicPredioSelectedCm
         });
+        console;
         featureSelected.add(results[0]);
         selfCm.map.addLayer(featureSelected);
         selfCm.map.centerAt(results[0].geometry);
@@ -564,12 +570,13 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
 
         selfCm.lotesQuery = null;
         selfCm.arancel = null;
-        selfCm.xy = null;
+        selfCm.xy = [];
 
         selfCm.casesCtnApCm.classList.remove('active');
         selfCm.resultCtnApCm.classList.remove('active');
         selfCm.obsCtnApCm.classList.remove('active');
         selfCm.requestTrayApCm.classList.toggle('active');
+        selfCm._removeClassActiveButton();
         selfCm._loadIniRequestsCm();
       }
     },
@@ -648,6 +655,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
             }
             selfCm.map.setInfoWindowOnClick(true);
             toolbarCm.deactivate();
+            selfCm._removeClassActiveButton();
           } else {
             alert(selfCm.nls.errorSnapingLocate);
           }
@@ -664,6 +672,14 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
         selfCm.map.addLayer(graphicLayerLineaDivision);
         selfCm.map.setInfoWindowOnClick(true);
         toolbarCm.deactivate();
+        selfCm._removeClassActiveButton();
+        // desactiva el boton luego de dibujar
+      }
+      // check exist activeButton class in button
+    },
+    _removeClassActiveButton: function _removeClassActiveButton() {
+      if (dojo.query('#' + selfCm.idButtonDrawActive).length > 0) {
+        dojo.query('#' + selfCm.idButtonDrawActive)[0].classList.remove('activeButton');
       }
     },
     _removeLayerGraphic: function _removeLayerGraphic(layerId) {
@@ -671,21 +687,30 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
         selfCm.map.removeLayer(selfCm.map.getLayer(layerId));
       }
     },
-    _activateTool: function _activateTool() {
+    _activateTool: function _activateTool(evt) {
+      selfCm._removeClassActiveButton();
+      selfCm.idButtonDrawActive = evt.currentTarget.id;
+      dojo.query('#' + selfCm.idButtonDrawActive)[0].classList.add('activeButton');
       selfCm._activateSnappingByReasignar();
       selfCm.map.setInfoWindowOnClick(false);
       selfCm._removeLayerGraphic(idGraphicPredioCm);
       toolbarCm.activate(Draw["POINT"]);
     },
     _activateToolAcumulacion: function _activateToolAcumulacion(evt) {
+      selfCm._removeClassActiveButton();
       var id = evt.currentTarget.id;
       selfCm.idPredioAcumulacion = id;
+      selfCm.idButtonDrawActive = id;
+      dojo.query('#' + selfCm.idButtonDrawActive)[0].classList.add('activeButton');
       selfCm.map.setInfoWindowOnClick(false);
       selfCm._activateSnappingByAcumulacion();
       selfCm._removeLayerGraphic(idGraphicPredioCm);
       toolbarCm.activate(Draw["POINT"]);
     },
-    _activateToolLinesDivision: function _activateToolLinesDivision() {
+    _activateToolLinesDivision: function _activateToolLinesDivision(evt) {
+      selfCm._removeClassActiveButton();
+      selfCm.idButtonDrawActive = evt.currentTarget.id;
+      dojo.query('#' + selfCm.idButtonDrawActive)[0].classList.add('activeButton');
       selfCm.map.setInfoWindowOnClick(false);
       selfCm._activateSnappingByDivision();
       selfCm._removeLayerGraphic(idGraphicLoteCm);
@@ -1092,6 +1117,9 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
       });
     },
     _activateToolPrediosByDivision: function _activateToolPrediosByDivision(evt) {
+      selfCm._removeClassActiveButton();
+      selfCm.idButtonDrawActive = evt.currentTarget.id;
+      dojo.query('#' + selfCm.idButtonDrawActive)[0].classList.add('activeButton');
       var id = evt.currentTarget.id;
       selfCm.idPredioDivision = id;
       var graphic = graphicLayerPredioByDivison.graphics.filter(function (item) {
@@ -1520,6 +1548,10 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
       });
     },
     _executeReasignacionGpService: function _executeReasignacionGpService(evt) {
+      if (!selfCm.xy.length) {
+        selfCm._showMessage("La solicitud no se puede realizar porque no se grafico la nueva ubicación del predio", type = "error");
+        return;
+      }
       selfCm._showMessageConfirm().then(function (result) {
         if (result) {
           var _params = {
@@ -1543,18 +1575,56 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
       });
     },
     _executeAcumulacionGpService: function _executeAcumulacionGpService(evt) {
+      if (!selfCm.map.getLayer(idGraphicLoteCm)) {
+        selfCm._showMessage("La solicitud no se puede realizar porque no se ha previsualizado la acumulación", type = "error");
+        return;
+      }
+
+      if (!selfCm.xy.length) {
+        selfCm._showMessage("La solicitud no se puede realizar porque no se grafico el predio resultante", type = "error");
+        return;
+      }
+      var labelCodLotesLayer = selfCm.map.getLayer(idGraphicLabelCodLote);
+      var _iteratorNormalCompletion12 = true;
+      var _didIteratorError12 = false;
+      var _iteratorError12 = undefined;
+
+      try {
+        for (var _iterator12 = labelCodLotesLayer.graphics[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+          var pred = _step12.value;
+
+          if (!pred.attributes.lot_urb || pred.attributes.lot_urb === "...") {
+            selfCm._showMessage("Debe especificar el valor de Lote Urbano", type = "error");
+            return;
+          }
+        }
+      } catch (err) {
+        _didIteratorError12 = true;
+        _iteratorError12 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion12 && _iterator12.return) {
+            _iterator12.return();
+          }
+        } finally {
+          if (_didIteratorError12) {
+            throw _iteratorError12;
+          }
+        }
+      }
+
       selfCm._showMessageConfirm().then(function (result) {
         if (result) {
-          var labelCodLotesLayer = selfCm.map.getLayer(idGraphicLabelCodLote).graphics[0];
+          var labelCodLotesLayerGraphic = labelCodLotesLayer.graphics[0];
           var _params2 = {
             "lotes_orig": selfCm.idlotes,
             "ubigeo": paramsApp['ubigeo'],
-            "lote_geom": JSON.stringify(selfCm.map.getLayer("graphicLoteCm").graphics[0].geometry.toJson()),
+            "lote_geom": JSON.stringify(selfCm.map.getLayer(idGraphicLoteCm).graphics[0].geometry.toJson()),
             "lote_pun_geom": JSON.stringify(selfCm.map.getLayer(idGraphicPuntoLote).graphics.map(function (i) {
               return [i.geometry.x, i.geometry.y];
             })),
             "predio_geom": JSON.stringify({ 'cod_pre': selfCm.idPredioAcumulacion.split("_")[2], 'coords': selfCm.xy }),
-            "atributos": JSON.stringify({ 'cod_lote': labelCodLotesLayer.symbol.text, 'lot_urb': labelCodLotesLayer.attributes.lot_urb }),
+            "atributos": JSON.stringify({ 'cod_lote': labelCodLotesLayerGraphic.symbol.text, 'lot_urb': labelCodLotesLayerGraphic.attributes.lot_urb }),
             "user": paramsApp['username'],
             "id_solicitud": selfCm.codRequestsCm
 
@@ -1572,45 +1642,44 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
       });
     },
     _executeSubdivisionGpService: function _executeSubdivisionGpService(evt) {
-      selfCm._showMessageConfirm().then(function (result) {
-        if (!selfCm.map.getLayer(idGraphicLoteCm)) {
-          selfCm._showMessage("La solicitud no se puede realizar porque no se ha previsualizado la división", type = "error");
-          return;
-        }
+      if (!selfCm.map.getLayer(idGraphicLoteCm)) {
+        selfCm._showMessage("La solicitud no se puede realizar porque no se ha previsualizado la división", type = "error");
+        return;
+      }
+      if (graphicLayerPredioByDivison.graphics.length != selfCm.map.getLayer(idGraphicLoteCm).graphics.length) {
+        selfCm._showMessage("La solicitud no se puede realizar porque no se graficaron los predios resultantes", type = "error");
+        return;
+      }
+      var labelCodLotesLayer = selfCm.map.getLayer(idGraphicLabelCodLote);
+      var _iteratorNormalCompletion13 = true;
+      var _didIteratorError13 = false;
+      var _iteratorError13 = undefined;
 
-        if (graphicLayerPredioByDivison.graphics.length == 0) {
-          selfCm._showMessage("La solicitud no se puede realizar porque no se graficaron los predios resultantes", type = "error");
-          return;
-        }
-        var labelCodLotesLayer = selfCm.map.getLayer(idGraphicLabelCodLote);
-        var _iteratorNormalCompletion12 = true;
-        var _didIteratorError12 = false;
-        var _iteratorError12 = undefined;
+      try {
+        for (var _iterator13 = labelCodLotesLayer.graphics[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
+          var pred = _step13.value;
 
+          if (!pred.attributes.lot_urb || pred.attributes.lot_urb === "...") {
+            selfCm._showMessage("Debe especificar los valores de Lote Urbano", type = "error");
+            return;
+          }
+        }
+      } catch (err) {
+        _didIteratorError13 = true;
+        _iteratorError13 = err;
+      } finally {
         try {
-          for (var _iterator12 = labelCodLotesLayer.graphics[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
-            var pred = _step12.value;
-
-            if (!pred.attributes.lot_urb || pred.attributes.lot_urb === "...") {
-              selfCm._showMessage("Debe especificar los valores de Lote Urbano", type = "error");
-              return;
-            }
+          if (!_iteratorNormalCompletion13 && _iterator13.return) {
+            _iterator13.return();
           }
-        } catch (err) {
-          _didIteratorError12 = true;
-          _iteratorError12 = err;
         } finally {
-          try {
-            if (!_iteratorNormalCompletion12 && _iterator12.return) {
-              _iterator12.return();
-            }
-          } finally {
-            if (_didIteratorError12) {
-              throw _iteratorError12;
-            }
+          if (_didIteratorError13) {
+            throw _iteratorError13;
           }
         }
+      }
 
+      selfCm._showMessageConfirm().then(function (result) {
         if (result) {
 
           var _params3 = {
@@ -1700,8 +1769,6 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
     _statusCallback: function _statusCallback(JobInfo) {
       // console.log(JobInfo)
       selfCm.jobId = JobInfo.jobId;
-      // get last item of JobInfo.messages
-      // console.log(JobInfo.jobStatus)
       var textMessage = JobInfo.messages.map(function (message) {
         return message.description;
       });
@@ -1798,27 +1865,27 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
       });
     },
     _sendDataToPlatform: function _sendDataToPlatform(data) {
-      var _iteratorNormalCompletion13 = true;
-      var _didIteratorError13 = false;
-      var _iteratorError13 = undefined;
+      var _iteratorNormalCompletion14 = true;
+      var _didIteratorError14 = false;
+      var _iteratorError14 = undefined;
 
       try {
-        for (var _iterator13 = data.results[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
-          var predio = _step13.value;
+        for (var _iterator14 = data.results[Symbol.iterator](), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
+          var predio = _step14.value;
 
           predio['ubigeo'] = paramsApp.ubigeo;
         }
       } catch (err) {
-        _didIteratorError13 = true;
-        _iteratorError13 = err;
+        _didIteratorError14 = true;
+        _iteratorError14 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion13 && _iterator13.return) {
-            _iterator13.return();
+          if (!_iteratorNormalCompletion14 && _iterator14.return) {
+            _iterator14.return();
           }
         } finally {
-          if (_didIteratorError13) {
-            throw _iteratorError13;
+          if (_didIteratorError14) {
+            throw _iteratorError14;
           }
         }
       }
