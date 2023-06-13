@@ -1,9 +1,17 @@
-define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin', "esri/toolbars/draw", "esri/toolbars/edit", "esri/graphic", "esri/symbols/SimpleFillSymbol", "esri/symbols/SimpleMarkerSymbol", "esri/symbols/SimpleLineSymbol", 'dojo/_base/Color', "esri/layers/GraphicsLayer", "esri/geometry/Point", "jimu/LayerInfos/LayerInfos", "dojo/_base/lang", "esri/layers/FeatureLayer", "esri/tasks/QueryTask", "esri/tasks/query", "jimu/WidgetManager", "esri/geometry/geometryEngine", "esri/geometry/Polyline", "esri/geometry/webMercatorUtils", "esri/tasks/Geoprocessor", 'esri/dijit/util/busyIndicator', "jimu/dijit/Message", "https://unpkg.com/@turf/turf@6/turf.min.js", "https://unpkg.com/xlsx@0.17.2/dist/xlsx.full.min.js", "dojo/Deferred", "esri/symbols/TextSymbol", "esri/symbols/Font"], function (declare, BaseWidget, _WidgetsInTemplateMixin, Draw, Edit, Graphic, SimpleFillSymbol, SimpleMarkerSymbol, SimpleLineSymbol, Color, GraphicsLayer, Point, LayerInfos, lang, FeatureLayer, QueryTask, Query, WidgetManager, geometryEngine, Polyline, webMercatorUtils, Geoprocessor, BusyIndicator, Message, turf, XLSX, Deferred, TextSymbol, Font) {
+define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin', "esri/toolbars/draw", "esri/toolbars/edit", "esri/graphic", "esri/symbols/SimpleFillSymbol", "esri/symbols/SimpleMarkerSymbol", "esri/symbols/SimpleLineSymbol", 'dojo/_base/Color', "esri/layers/GraphicsLayer", "esri/geometry/Point", "esri/geometry/Polygon", "jimu/LayerInfos/LayerInfos", "dojo/_base/lang", "esri/layers/FeatureLayer", "esri/tasks/QueryTask", "esri/tasks/query", "jimu/WidgetManager", "esri/geometry/geometryEngine", "esri/geometry/Polyline", "esri/geometry/webMercatorUtils", "esri/tasks/Geoprocessor", 'esri/dijit/util/busyIndicator', "jimu/dijit/Message", "https://unpkg.com/@turf/turf@6/turf.min.js", "https://unpkg.com/xlsx@0.17.2/dist/xlsx.full.min.js", "dojo/Deferred", "esri/symbols/TextSymbol", "esri/symbols/Font", "dojo/promise/all", "esri/request"], function (declare, BaseWidget, _WidgetsInTemplateMixin, Draw, Edit, Graphic, SimpleFillSymbol, SimpleMarkerSymbol, SimpleLineSymbol, Color, GraphicsLayer, Point, Polygon, LayerInfos, lang, FeatureLayer, QueryTask, Query, WidgetManager, geometryEngine, Polyline, webMercatorUtils, Geoprocessor, BusyIndicator, Message, turf, XLSX, Deferred, TextSymbol, Font, all, esriRequest) {
+  function _toConsumableArray(arr) {
+    if (Array.isArray(arr)) {
+      for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
+        arr2[i] = arr[i];
+      }
+
+      return arr2;
+    } else {
+      return Array.from(arr);
+    }
+  }
 
   var requestToAttendState = "por_atender";
-  // import turf from "turf";
-  // import XLSX from "xlsx";
-
   var requestsObservedState = "observado";
   var requestsAttendState = "atendido";
 
@@ -18,7 +26,8 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
   var idLyrCfUnidadesurbanas = "CARTO_FISCAL_6806_6";
   var idLyrCfParques = "CARTO_FISCAL_6806_7";
   var idLyrCfManzana = "CARTO_FISCAL_6806_8";
-  var idLyrCfSector = "CARTO_FISCAL_6806_9";
+  var idLyrCfManzanaUrb = "CARTO_FISCAL_6806_9";
+  var idLyrCfSector = "CARTO_FISCAL_6806_10";
   // const idLyrActpuntoimg = "ACTUALIZACION_DE_PUNTO_IMG_1890"
   var idLyrDistricts = "limites_nacional_1821_2";
 
@@ -237,6 +246,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
       selfCm.layersMap.getLayerInfoById(idLyrCfUnidadesurbanas).setFilter(selfCm.queryUbigeo);
       selfCm.layersMap.getLayerInfoById(idLyrCfParques).setFilter(selfCm.queryUbigeo);
       selfCm.layersMap.getLayerInfoById(idLyrCfManzana).setFilter(selfCm.queryUbigeo);
+      selfCm.layersMap.getLayerInfoById(idLyrCfManzanaUrb).setFilter(selfCm.queryUbigeo);
       selfCm.layersMap.getLayerInfoById(idLyrCfSector).setFilter(selfCm.queryUbigeo);
       // selfCm.layersMap.getLayerInfoById(idLyrActpuntoimg).setFilter(selfCm.queryUbigeo)
     },
@@ -375,7 +385,6 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
         var featureSelected = new GraphicsLayer({
           id: idGraphicPredioSelectedCm
         });
-        console;
         featureSelected.add(results[0]);
         selfCm.map.addLayer(featureSelected);
         selfCm.map.centerAt(results[0].geometry);
@@ -1635,7 +1644,8 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
               return;
             }
           }
-          selfCm._executeGPService(selfCm.config.acumulacionUrl, _params2);
+          selfCm._executeGeoprocessingApi(_params2);
+          // selfCm._executeGPService(selfCm.config.acumulacionUrl, params)
         } else {
           return;
         }
@@ -2029,6 +2039,865 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
       evt.currentTarget.dataset.val = columnOrder.includes('-') ? columnOrder.replace('-', '') : '-' + columnOrder;
       selfCm.queryRequests['ordering'] = evt.currentTarget.dataset.val;
       dojo.query(".tablinksCm.active")[0].click();
+    },
+    _executeGeoprocessingApi: function _executeGeoprocessingApi(params) {
+      var urlStatusRequest = selfCm.config.applicationListUrl + '/' + selfCm.codRequestsCm;
+      selfCm._callApiRestServices(urlStatusRequest, {}).then(function (result) {
+        try {
+          if (result.idStatus != 1) {
+            throw new Error('Esta solicitud (' + selfCm.codRequestsCm + ') ya fue procesada con anterioridad: ' + result.date);
+          }
+          selfCm.busyIndicator.show();
+          // Agregar un elemento de texto debajo del BusyIndicator
+          var buzyElm = dojo.query("#dojox_widget_Standby_0")[0];
+          var imgElm = buzyElm.querySelector("img");
+          var loadingText = document.createElement('div');
+          loadingText.id = 'loadingTextCustom';
+          loadingText.textContent = 'Procesando solicitud de acumulación...';
+          loadingText.style.position = 'absolute';
+          var topMessage = parseFloat(imgElm.style.top) + 80;
+          loadingText.style.top = topMessage + 'px';
+          var leftImg = parseFloat(imgElm.style.left) + imgElm.width / 2;
+          loadingText.style.left = leftImg + 'px';
+          loadingText.style.transform = 'translate(-50%, -50%)';
+          loadingText.style.background = 'white';
+          loadingText.style.zIndex = '1000';
+          dojo.query("#dojox_widget_Standby_0")[0].appendChild(loadingText);
+          // dojo.query("#loadingTextCustom")[0].textContent = textMessage.slice(-1)[0] ? textMessage.slice(-1)[0] : ''
+          selfCm._executeAccumulation(params);
+          // selfCm._FormResult(selfCm.codRequestsCm, selfCm.caseDescription);
+          // selfCm.gp = new Geoprocessor(url);
+          // selfCm.gp.submitJob(params, selfCm._completeCallback, selfCm._statusCallback);        
+        } catch (error) {
+          dojo.query("#loadingTextCustom")[0].remove();
+          selfCm.busyIndicator.hide();
+          selfCm._showMessage(error.message, type = "error");
+        }
+      });
+    },
+    _executeAccumulation: function _executeAccumulation(params) {
+      var loteResult = {};
+      var lotePunResult = {};
+      var predioResult = {};
+      selfCm._getManzanaByLote(params.lote_geom).then(function (manzana) {
+        return selfCm._translateFieldsManzanaToLote(params.lote_geom, manzana);
+      }).then(function (lote) {
+        return selfCm._translateFieldsArancelToLote(lote, params.predio_geom);
+      }).then(function (lote) {
+        return selfCm._calculateFieldsOfLote(lote, params.atributos);
+      }).then(function (lote) {
+        return selfCm._calculateTipLot(lote, params.lotes_orig);
+      }).then(function (lote) {
+        loteResult = lote;
+        return selfCm._translateFieldsLoteToPuntoLote(lote, params.lote_pun_geom);
+      }).then(function (lotePun) {
+        return selfCm._getArancelByPuntoLote(lotePun);
+      }).then(function (data) {
+        return selfCm._translateFieldsArancelToLotePunto(data);
+      }).then(function (lotePun) {
+        lotePunResult = lotePun;
+        return selfCm._translateFieldsPuntoLoteToPredio(lotePun, params.predio_geom);
+      }).then(function (predio) {
+        return selfCm._translateFieldsArancelToPredio(predio);
+      }).then(function (predio) {
+        return selfCm._calculateFieldsOfPredio(predio);
+      }).then(function (predio) {
+        predioResult = predio;
+        return selfCm._getLoteOrig(params.lotes_orig);
+      }).then(function (lotes_orig) {
+        return selfCm._lotesToHis(lotes_orig);
+      }).then(function (data2) {
+        return selfCm._deleteLotesOrig(data2);
+      }).then(function () {
+        return selfCm._addLotesNew(loteResult);
+      }).then(function () {
+        return selfCm._getLotesPuntosOrig(loteResult);
+      }).then(function (lotesPunOrig) {
+        return selfCm._lotesPuntosToHis(lotesPunOrig);
+      }).then(function (data3) {
+        return selfCm._deleteLotesPuntosOrig(data3);
+      }).then(function () {
+        return selfCm._addLotesPuntosNew(lotePunResult);
+      }).then(function () {
+        return selfCm._getPrediosOrig(loteResult);
+      }).then(function (prediosOrig) {
+        return selfCm._prediosToHis(prediosOrig);
+      }).then(function (data4) {
+        return selfCm._deletePrediosOrig(data4);
+      }).then(function () {
+        return selfCm._addPrediosNew(predioResult);
+      }).then(function (predioResult) {
+        selfCm._updateStatusRequests([predioResult]);
+        selfCm._removeLayerGraphic(idGraphicPredioCm);
+        selfCm._removeLayerGraphic(idGraphicLoteCm);
+        selfCm._removeLayerGraphic(idGraphicPuntoLote);
+        selfCm._removeLayerGraphic(idGraphicFrenteLote);
+        selfCm._removeLayerGraphic(idGraphicLabelCodLote);
+        selfCm.map.getLayer(idLyrCatastroFiscal).setVisibility(false);
+        selfCm.map.getLayer(idLyrCatastroFiscal).setVisibility(true);
+        selfCm._FormResult(selfCm.codRequestsCm, selfCm.caseDescription);
+        dojo.query("#loadingTextCustom")[0].remove();
+        selfCm.busyIndicator.hide();
+        // selfCm._showMessage(`Se ha procesado la solicitud ${selfCm.codRequestsCm} con éxito`, type="success")
+      }).otherwise(function (error) {
+        selfCm.busyIndicator.hide();
+        dojo.query("#loadingTextCustom")[0].remove();
+        selfCm._showMessage('Ocurrio un problema al procesar su solicitud: ' + error, type = "error");
+      });
+    },
+    _atributeTransfer: function _atributeTransfer(obj1, obj2) {
+      var propsUse = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+      var propsOmit = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : [];
+
+      var fieldMatch = [];
+      if (propsUse.length > 0) {
+        fieldMatch = propsUse;
+      } else {
+        var props1 = Object.keys(obj1);
+        var props2 = Object.keys(obj2);
+        fieldMatch = props1.filter(function (prop) {
+          return props2.includes(prop);
+        });
+      }
+      // retirar los campos omitidos
+      if (propsOmit.length > 0) {
+        fieldMatch = fieldMatch.filter(function (prop) {
+          return !propsOmit.includes(prop);
+        });
+      }
+      fieldMatch.forEach(function (prop) {
+        if (obj2.hasOwnProperty(prop)) {
+          obj1[prop] = obj2[prop];
+        }
+      });
+    },
+    _getManzanaByLote: function _getManzanaByLote(lote_geom) {
+      var deferred = new Deferred();
+      var urlManzanaUrb = selfCm.layersMap.getLayerInfoById(idLyrCfManzanaUrb).getUrl();
+      var queryTask = new QueryTask(urlManzanaUrb);
+      // Construye la query
+      var query = new Query();
+      query.returnGeometry = true;
+      query.outFields = ["*"];
+      query.geometry = new Polygon(JSON.parse(lote_geom));
+      // query.geometry = JSON.parse(params.lote_geom);
+      query.geometryType = "esriGeometryPolygon";
+      queryTask.execute(query).then(function (response) {
+        // Comprobar si se encontró alguna manzana
+        if (response.features.length > 0) {
+          // Mostrar el primer resultado en la consola
+          return deferred.resolve(response.features[0]);
+        } else {
+          deferred.reject("No se encontraron manzanas");
+        }
+      }, function (error) {
+        deferred.reject(error);
+      });
+      return deferred.promise;
+    },
+    _translateFieldsManzanaToLote: function _translateFieldsManzanaToLote(lote_geom, manzana) {
+      var deferred = new Deferred();
+      var urlLotes = selfCm.layersMap.getLayerInfoById(idLyrCfLotes).getUrl();
+      var queryTask = new QueryTask(urlLotes);
+      var query = new Query();
+      query.where = "1=1";
+      query.returnGeometry = true;
+      query.outFields = ["*"];
+      query.num = 1;
+      queryTask.execute(query).then(function (response) {
+        if (response.features.length > 0) {
+          // Mostrar el primer resultado en la consola
+          _FIELDS_USE_MZ = ["ZONA_UTM", "UBIGEO", "COD_SECT", "COD_MZN", "COD_UU", "TIPO_UU", "NOM_UU", "NOM_REF", "MZN_URB"];
+          var lote = response.features[0];
+          delete lote.attributes["Shape.STArea()"];
+          delete lote.attributes["Shape.STLength()"];
+          delete lote.attributes["created_date"];
+          delete lote.attributes["created_user"];
+          delete lote.attributes["last_edited_date"];
+          delete lote.attributes["last_edited_user"];
+          delete lote.attributes["OBJECTID"];
+          delete lote.attributes["GlobalID"];
+          // poner en blanco los campos
+          for (var prop in lote.attributes) {
+            if (lote.attributes.hasOwnProperty(prop) && prop != "OBJECTID" && prop != "SHAPE") {
+              lote.attributes[prop] = null;
+            }
+          }
+          // transferir los campos
+          selfCm._atributeTransfer(lote.attributes, manzana.attributes, _FIELDS_USE_MZ);
+          lote.geometry = new Polygon(JSON.parse(lote_geom));
+          return deferred.resolve(lote);
+        } else {
+          deferred.reject("No se encontraron lotes");
+        }
+      }, function (error) {
+        deferred.reject(error);
+      });
+      return deferred.promise;
+    },
+    _translateFieldsArancelToLote: function _translateFieldsArancelToLote(lote, predio_geom) {
+      var deferred = new Deferred();
+      var urlArancel = selfCm.layersMap.getLayerInfoById(idLyrCfArancel).getUrl();
+      var queryTask = new QueryTask(urlArancel);
+      // Construye la query
+      var query = new Query();
+      query.returnGeometry = true;
+      query.outFields = ["*"];
+      var predioPoint = new Point({
+        x: JSON.parse(predio_geom).coords[0],
+        y: JSON.parse(predio_geom).coords[1],
+        spatialReference: { wkid: 4326 }
+      });
+      lote.attributes["COORD_X"] = JSON.parse(predio_geom).coords[0];
+      lote.attributes["COORD_Y"] = JSON.parse(predio_geom).coords[1];
+      query.geometry = predioPoint;
+      query.geometryType = "esriGeometryPoint";
+      queryTask.execute(query).then(function (response) {
+        if (response.features.length > 0) {
+          _FIELDS_USE_ARC = ["COD_VIA", "TIP_VIA", "NOM_VIA", "CUADRA", "LADO", "ID_ARANC"];
+          var arancel = response.features[0];
+          selfCm._atributeTransfer(lote.attributes, arancel.attributes, _FIELDS_USE_ARC);
+          deferred.resolve(lote);
+        } else {
+          deferred.reject("No se encontraron Frentes para este lote");
+        }
+      }, function (error) {
+        deferred.reject(error);
+      });
+      return deferred.promise;
+    },
+    _calculateFieldsOfLote: function _calculateFieldsOfLote(lote, atributos) {
+      var deferred = new Deferred();
+      var urlLotes = selfCm.layersMap.getLayerInfoById(idLyrCfLotes).getUrl();
+      var queryTask = new QueryTask(urlLotes);
+      // Construye la query
+      var query = new Query();
+
+      var statDefIdLoteP = new esri.tasks.StatisticDefinition();
+      statDefIdLoteP.statisticType = "max";
+      statDefIdLoteP.onStatisticField = "ID_LOTE_P";
+      statDefIdLoteP.outStatisticFieldName = "ID_LOTE_P_MAX";
+
+      var statDefRanCpu = new esri.tasks.StatisticDefinition();
+      statDefRanCpu.statisticType = "max";
+      statDefRanCpu.onStatisticField = "RAN_CPU";
+      statDefRanCpu.outStatisticFieldName = "RAN_CPU_MAX";
+
+      query.returnGeometry = false;
+      query.outStatistics = [statDefIdLoteP, statDefRanCpu];
+
+      queryTask.execute(query).then(function (response) {
+        lote.attributes["ID_LOTE_P"] = response.features[0].attributes["ID_LOTE_P_MAX"] + 1;
+        lote.attributes["RAN_CPU"] = response.features[0].attributes["RAN_CPU_MAX"] + 1;
+        lote.attributes["ANO_CART"] = new Date().getFullYear();
+        lote.attributes["FUENTE"] = selfCm.codRequestsCm;
+        lote.attributes["NOM_PC"] = 'PCF';
+        lote.attributes["NOM_USER"] = paramsApp['username'];
+        lote.attributes["COD_LOTE"] = JSON.parse(atributos)['cod_lote'];
+        lote.attributes["LOT_URB"] = JSON.parse(atributos)["lot_urb"];
+        return deferred.resolve(lote);
+      }, function (error) {
+        deferred.reject(error);
+      });
+      return deferred.promise;
+    },
+    _calculateTipLot: function _calculateTipLot(lote, lote_orig) {
+      var deferred = new Deferred();
+      var urlLotes = selfCm.layersMap.getLayerInfoById(idLyrCfLotes).getUrl();
+      var queryTask = new QueryTask(urlLotes);
+      // Construye la query
+      var query = new Query();
+      query.where = _ID_LOTE_P_FIELD + ' in (' + lote_orig.join(",") + ') and (' + _UBIGEO_FIELD + ' = ' + paramsApp['ubigeo'] + ')';
+      query.returnGeometry = false;
+      query.outFields = ["TIP_LOT"];
+      queryTask.execute(query).then(function (response) {
+        var tipLot = new Set(response.features.map(function (i) {
+          return i.attributes.TIP_LOT;
+        }));
+        lote.attributes["TIP_LOT"] = [].concat(_toConsumableArray(tipLot)) == ['2'] ? '2' : '1';
+        return deferred.resolve(lote);
+      }, function (error) {
+        deferred.reject(error);
+      });
+      return deferred.promise;
+    },
+    _translateFieldsLoteToPuntoLote: function _translateFieldsLoteToPuntoLote(lote, lote_pun_geom) {
+      var deferred = new Deferred();
+      var urlLotesPun = selfCm.layersMap.getLayerInfoById(idLyrCfLotes_pun).getUrl();
+      var queryTask = new QueryTask(urlLotesPun);
+      var query = new Query();
+      query.where = "1=1";
+      query.returnGeometry = true;
+      query.outFields = ["*"];
+      query.num = 1;
+      queryTask.execute(query).then(function (response) {
+        if (response.features.length > 0) {
+          var lotePun = response.features[0];
+          delete lotePun.attributes["created_date"];
+          delete lotePun.attributes["created_user"];
+          delete lotePun.attributes["last_edited_date"];
+          delete lotePun.attributes["last_edited_user"];
+          delete lotePun.attributes["OBJECTID"];
+          delete lotePun.attributes["GlobalID"];
+
+          for (var prop in lotePun.attributes) {
+            if (lotePun.attributes.hasOwnProperty(prop) && prop != "OBJECTID" && prop != "SHAPE") {
+              lotePun.attributes[prop] = null;
+            }
+          }
+
+          _FIELDS_OMIT_LOT_P_LOT = ["COD_VIA", "TIP_VIA", "NOM_VIA", "CUADRA", "LADO", "ID_ARANC", "COORD_X", "COORD_Y"];
+
+          selfCm._atributeTransfer(lotePun.attributes, lote.attributes, propsUse = [], propsOmit = _FIELDS_OMIT_LOT_P_LOT);
+          var lotePunArray = [];
+          lote_pun_geom = JSON.parse(lote_pun_geom);
+          for (var idx in lote_pun_geom) {
+            var lotePunIdx = lotePun.clone();
+            var coords = lote_pun_geom[idx];
+            lotePunIdx.attributes["COORD_X"] = coords[0];
+            lotePunIdx.attributes["COORD_Y"] = coords[1];
+            lotePunIdx.geometry = new Point({ x: coords[0], y: coords[1], spatialReference: { wkid: 4326 } });
+            lotePunArray.push(lotePunIdx);
+          }
+
+          return deferred.resolve(lotePunArray);
+        }
+      }, function (error) {
+        deferred.reject(error);
+      });
+      return deferred.promise;
+    },
+    _getArancelByPuntoLote: function _getArancelByPuntoLote(lotePunArray) {
+      var promises = lotePunArray.map(function (lotePun) {
+        var urlArancel = selfCm.layersMap.getLayerInfoById(idLyrCfArancel).getUrl();
+        var queryTask = new QueryTask(urlArancel);
+        // Construye la query
+        var query = new Query();
+        query.returnGeometry = true;
+        query.outFields = ["*"];
+        query.geometry = lotePun.geometry;
+        query.geometryType = "esriGeometryPoint";
+        return queryTask.execute(query);
+      });
+      return all(promises).then(function (results) {
+        return {
+          results: results,
+          lotePunArray: lotePunArray
+        };
+      });
+    },
+    _translateFieldsArancelToLotePunto: function _translateFieldsArancelToLotePunto(data) {
+      var deferred = new Deferred();
+
+      var zipped = data.lotePunArray.map(function (element, index) {
+        return [element, data.results[index]];
+      });
+      _FIELD_USER_LOT_P_ARC = ["COD_VIA", "TIP_VIA", "NOM_VIA", "CUADRA", "LADO", "ID_ARANC", "VAL_ACT"];
+      var lotePunArray = [];
+      var _iteratorNormalCompletion15 = true;
+      var _didIteratorError15 = false;
+      var _iteratorError15 = undefined;
+
+      try {
+        for (var _iterator15 = zipped[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
+          var i = _step15.value;
+
+          var arancel = i[1].features[0].attributes;
+          var lotePun = i[0];
+          selfCm._atributeTransfer(lotePun.attributes, arancel, propsUse = _FIELD_USER_LOT_P_ARC);
+          lotePunArray.push(lotePun);
+        }
+      } catch (err) {
+        _didIteratorError15 = true;
+        _iteratorError15 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion15 && _iterator15.return) {
+            _iterator15.return();
+          }
+        } finally {
+          if (_didIteratorError15) {
+            throw _iteratorError15;
+          }
+        }
+      }
+
+      var urlLotesPun = selfCm.layersMap.getLayerInfoById(idLyrCfLotes_pun).getUrl();
+      var queryTask = new QueryTask(urlLotesPun);
+      // Construye la query
+      var query = new Query();
+
+      query.where = _UBIGEO_FIELD + ' = \'' + paramsApp['ubigeo'] + '\'';
+      var statDef = new esri.tasks.StatisticDefinition();
+      statDef.statisticType = "max";
+      statDef.onStatisticField = "SECUEN";
+      statDef.outStatisticFieldName = "SECUEN_MAX";
+
+      query.returnGeometry = false;
+      query.outStatistics = [statDef];
+
+      queryTask.execute(query).then(function (response) {
+        var secuen = response.features[0].attributes.SECUEN_MAX + 1;
+        var _iteratorNormalCompletion16 = true;
+        var _didIteratorError16 = false;
+        var _iteratorError16 = undefined;
+
+        try {
+          for (var _iterator16 = lotePunArray[Symbol.iterator](), _step16; !(_iteratorNormalCompletion16 = (_step16 = _iterator16.next()).done); _iteratorNormalCompletion16 = true) {
+            var i = _step16.value;
+
+            i.attributes["SECUEN"] = secuen;
+            i.attributes["ID_LOTE"] = '' + i.attributes["ZONA_UTM"] + paramsApp['ubigeo'] + secuen;
+            secuen += 1;
+          }
+        } catch (err) {
+          _didIteratorError16 = true;
+          _iteratorError16 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion16 && _iterator16.return) {
+              _iterator16.return();
+            }
+          } finally {
+            if (_didIteratorError16) {
+              throw _iteratorError16;
+            }
+          }
+        }
+
+        return deferred.resolve(lotePunArray);
+      }, function (error) {
+        deferred.reject(error);
+      });
+      return deferred.promise;
+    },
+    _translateFieldsPuntoLoteToPredio: function _translateFieldsPuntoLoteToPredio(lotePunArray, predio_geom) {
+      var deferred = new Deferred();
+      predio_geom = JSON.parse(predio_geom);
+      var predioGeom = new Point({ x: predio_geom.coords[0], y: predio_geom.coords[1], spatialReference: { wkid: 4326 } });
+      var lotePun = null;
+      // let bufferedPoint = geometryEngine.buffer(predioGeom, 0.5, "meters");
+      var _iteratorNormalCompletion17 = true;
+      var _didIteratorError17 = false;
+      var _iteratorError17 = undefined;
+
+      try {
+        for (var _iterator17 = lotePunArray[Symbol.iterator](), _step17; !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
+          var i = _step17.value;
+
+          var intersects = geometryEngine.intersects(i.geometry, predioGeom);
+          if (intersects) {
+            lotePun = i;
+            break;
+          }
+        }
+      } catch (err) {
+        _didIteratorError17 = true;
+        _iteratorError17 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion17 && _iterator17.return) {
+            _iterator17.return();
+          }
+        } finally {
+          if (_didIteratorError17) {
+            throw _iteratorError17;
+          }
+        }
+      }
+
+      var urlPredios = selfCm.layersMap.getLayerInfoById(idLyrCfPredios).getUrl();
+      var queryTask = new QueryTask(urlPredios);
+      var query = new Query();
+      query.where = "1=1";
+      query.returnGeometry = true;
+      query.outFields = ["*"];
+      query.num = 1;
+      queryTask.execute(query).then(function (response) {
+        if (response.features.length > 0) {
+          var predio = response.features[0];
+          delete predio.attributes["created_date"];
+          delete predio.attributes["created_user"];
+          delete predio.attributes["last_edited_date"];
+          delete predio.attributes["last_edited_user"];
+          delete predio.attributes["OBJECTID"];
+          delete predio.attributes["GlobalID"];
+
+          for (var prop in predio.attributes) {
+            if (predio.attributes.hasOwnProperty(prop) && prop != "OBJECTID" && prop != "SHAPE") {
+              predio.attributes[prop] = null;
+            }
+          }
+          _FIELDS_USE_PREDIO_LOT_P = ["ID_LOTE_P", "ZONA_UTM", "UBIGEO", "ID_ARANC", "ID_LOTE", "COD_SECT", "COD_MZN", "COD_LOTE", "COD_UU", "COD_VIA", "TIPO_UU", "NOM_UU", "NOM_REF", "MZN_URB", "LOT_URB", "TIP_VIA", "NOM_VIA", "CUADRA", "LADO", "ANO_CART", "FUENTE", "VAL_ACT", "RAN_CPU", "NOM_PC", "NOM_USER"];
+          selfCm._atributeTransfer(predio.attributes, lotePun.attributes, propsUse = _FIELDS_USE_PREDIO_LOT_P);
+          predio.attributes["COD_PRE"] = predio_geom.cod_pre;
+          predio.attributes["COD_UI"] = 1;
+          predio.attributes["ESTADO"] = 1;
+          predio.attributes["COOR_X"] = predio_geom.coords[0];
+          predio.attributes["COOR_Y"] = predio_geom.coords[1];
+          predio.attributes["COD_VER"] = selfCm._getValueCodVer(predio.attributes["RAN_CPU"], 1);
+          predio.attributes["COD_CPU"] = predio.attributes["RAN_CPU"] + '-0001-' + predio.attributes["COD_VER"];
+          predio.attributes["DIR_MUN"] = predio.attributes["TIP_VIA"] + ' ' + predio.attributes["NOM_VIA"] + ' ' + predio.attributes["NUM_MUN"];
+          predio.attributes["DIR_URB"] = predio.attributes["TIP_VIA"] + ' ' + predio.attributes["NOM_VIA"] + ' ' + predio.attributes["NUM_MUN"];
+          predio.geometry = predioGeom;
+          return deferred.resolve(predio);
+        }
+      }, function (error) {
+        deferred.reject(error);
+      });
+      return deferred.promise;
+    },
+    _getValueCodVer: function _getValueCodVer(ran_cpu, cod_ui) {
+      _FACTOR = [2, 3, 4, 5, 6, 7, 2, 3, 4, 5, 6, 7];
+      // Obteniendo código concatenado
+      var cod_ver_concatenate = ran_cpu.toString() + ("0000" + cod_ui.toString()).slice(-4);
+
+      // Reversa de código concatenado
+      var cod_ver = cod_ver_concatenate.split('').reverse().join('');
+
+      // Aplicando fórmula
+      var response = 11 - cod_ver.split('').map(function (digit, index) {
+        return parseInt(digit) * _FACTOR[index];
+      }).reduce(function (a, b) {
+        return a + b;
+      }, 0) % 11;
+
+      if (response > 9) {
+        response = 11 - response;
+      }
+
+      return response;
+    },
+    _translateFieldsArancelToPredio: function _translateFieldsArancelToPredio(predio) {
+      var deferred = new Deferred();
+      var urlArancel = selfCm.layersMap.getLayerInfoById(idLyrCfArancel).getUrl();
+      var queryTask = new QueryTask(urlArancel);
+      // Construye la query
+      var query = new Query();
+      query.returnGeometry = true;
+      query.outFields = ["SEC_EJEC"];
+      query.geometry = predio.geometry;
+      query.geometryType = "esriGeometryPoint";
+      queryTask.execute(query).then(function (response) {
+        if (response.features.length > 0) {
+          var arancel = response.features[0];
+          selfCm._atributeTransfer(predio.attributes, arancel.attributes, ["SEC_EJEC"]);
+          deferred.resolve(predio);
+        } else {
+          deferred.reject("No se encontraron Frentes para este lote");
+        }
+      }, function (error) {
+        deferred.reject(error);
+      });
+      return deferred.promise;
+    },
+    _calculateFieldsOfPredio: function _calculateFieldsOfPredio(predio) {
+      var deferred = new Deferred();
+      var urlPredios = selfCm.layersMap.getLayerInfoById(idLyrCfPredios).getUrl();
+      var queryTask = new QueryTask(urlPredios);
+      // Construye la query
+      var query = new Query();
+      query.returnGeometry = false;
+      query.where = _UBIGEO_FIELD + ' = \'' + paramsApp['ubigeo'] + '\'';
+      var statDef = new esri.tasks.StatisticDefinition();
+      statDef.statisticType = "max";
+      statDef.onStatisticField = "ID_PRED";
+      statDef.outStatisticFieldName = "ID_PRED_MAX";
+      query.outStatistics = [statDef];
+      queryTask.execute(query).then(function (response) {
+        if (response.features.length > 0) {
+          var id_pred = parseInt(response.features[0].attributes["ID_PRED_MAX"]) + 1;
+          predio.attributes["ID_PRED"] = id_pred;
+          deferred.resolve(predio);
+        } else {
+          deferred.reject("No se encontraron Predios para este lote");
+        }
+      }, function (error) {
+        deferred.reject(error);
+      });
+      return deferred.promise;
+    },
+    _getLoteOrig: function _getLoteOrig(lotes_orig) {
+      var deferred = new Deferred();
+      var urlLotes = selfCm.layersMap.getLayerInfoById(idLyrCfLotes).getUrl();
+      var queryTask = new QueryTask(urlLotes);
+      // Construye la query
+      var query = new Query();
+      query.returnGeometry = true;
+      query.outFields = ["*"];
+      query.where = _ID_LOTE_P_FIELD + ' in (' + lotes_orig.join(",") + ') and (' + _UBIGEO_FIELD + ' = \'' + paramsApp['ubigeo'] + '\')';
+      console.log(query.where);
+      queryTask.execute(query).then(function (response) {
+        if (response.features.length > 0) {
+          deferred.resolve(response.features);
+        } else {
+          deferred.reject("No se encontraron Lotes para este predio");
+        }
+      }, function (error) {
+        deferred.reject(error);
+      });
+      return deferred.promise;
+    },
+    _lotesToHis: function _lotesToHis(lotes_orig) {
+      var deferred = new Deferred();
+      var featureLayer = new FeatureLayer("https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_H/FeatureServer/2");
+
+      var graphics = [];
+      lotes_orig.forEach(function (lote_orig) {
+        var graphic = new Graphic();
+        graphic.attributes = lote_orig.attributes;
+        graphic.geometry = lote_orig.geometry;
+        graphics.push(graphic);
+      });
+
+      var graphicsParse = JSON.parse(JSON.stringify(graphics));
+      // console.log(graphicsParse.map((i) => {return i.attributes.OBJECTID}))
+
+      featureLayer.applyEdits(graphics, null, null).then(function (add, update, del) {
+        deferred.resolve(graphicsParse);
+      }, function (err) {
+        deferred.reject(err);
+      });
+      return deferred.promise;
+    },
+    _deleteLotesOrig: function _deleteLotesOrig(data) {
+      var deferred = new Deferred();
+      var deleteParams = {
+        where: 'OBJECTID IN (' + data.map(function (i) {
+          return i.attributes.OBJECTID;
+        }) + ')',
+        f: "json"
+      };
+
+      var requestOptions = {
+        url: "https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/FeatureServer/5/deleteFeatures",
+        content: deleteParams,
+        handleAs: "json",
+        callbackParamName: "callback"
+      };
+
+      esriRequest(requestOptions, {
+        usePost: true
+      }).then(function (response) {
+        deferred.resolve(response.deleteResults);
+      }, function (error) {
+        deferred.reject(error);
+      });
+      return deferred.promise;
+    },
+    _addLotesNew: function _addLotesNew(lote) {
+      var deferred = new Deferred();
+      var featureLayer = new FeatureLayer("https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/FeatureServer/5");
+      var graphic = new Graphic();
+      graphic.attributes = lote.attributes;
+      graphic.geometry = lote.geometry;
+      featureLayer.applyEdits([graphic], null, null).then(function (adds) {
+        deferred.resolve(adds);
+      }, function (err) {
+        deferred.reject(err);
+      });
+      return deferred.promise;
+    },
+    _getLotesPuntosOrig: function _getLotesPuntosOrig(lote) {
+      var deferred = new Deferred();
+      var urlLotesPuntos = selfCm.layersMap.getLayerInfoById(idLyrCfLotes_pun).getUrl();
+      var queryTask = new QueryTask(urlLotesPuntos);
+      // Construye la query
+      var query = new Query();
+      query.returnGeometry = true;
+      query.outFields = ["*"];
+      query.geometry = lote.geometry;
+      query.geometryType = "esriGeometryPolygon";
+      queryTask.execute(query).then(function (response) {
+        if (response.features.length > 0) {
+          deferred.resolve(response.features);
+        } else {
+          deferred.reject("No se encontraron Lotes Puntos para este lote");
+        }
+      }, function (error) {
+        deferred.reject(error);
+      });
+      return deferred.promise;
+    },
+    _lotesPuntosToHis: function _lotesPuntosToHis(lotesPunOrig) {
+      var deferred = new Deferred();
+      var featureLayer = new FeatureLayer("https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_H/FeatureServer/1");
+
+      var graphics = [];
+      lotesPunOrig.forEach(function (lotePunOrig) {
+        var graphic = new Graphic();
+        graphic.attributes = lotePunOrig.attributes;
+        graphic.geometry = lotePunOrig.geometry;
+        graphics.push(graphic);
+      });
+
+      var graphicsParse = JSON.parse(JSON.stringify(graphics));
+
+      featureLayer.applyEdits(graphics, null, null).then(function (add, update, del) {
+        deferred.resolve(graphicsParse);
+      }, function (err) {
+        deferred.reject(err);
+      });
+      return deferred.promise;
+    },
+    _deleteLotesPuntosOrig: function _deleteLotesPuntosOrig(data) {
+      var deferred = new Deferred();
+      var deleteParams = {
+        where: 'OBJECTID IN (' + data.map(function (i) {
+          return i.attributes.OBJECTID;
+        }) + ')',
+        f: "json"
+      };
+
+      var requestOptions = {
+        url: "https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/FeatureServer/1/deleteFeatures",
+        content: deleteParams,
+        handleAs: "json",
+        callbackParamName: "callback"
+      };
+
+      esriRequest(requestOptions, {
+        usePost: true
+      }).then(function (response) {
+        deferred.resolve(response.deleteResults);
+      }, function (error) {
+        deferred.reject(error);
+      });
+      return deferred.promise;
+    },
+    _addLotesPuntosNew: function _addLotesPuntosNew(lotesPun) {
+      var deferred = new Deferred();
+      var featureLayer = new FeatureLayer("https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/FeatureServer/1");
+      var graphics = [];
+      lotesPun.forEach(function (lotePun) {
+        var graphic = new Graphic();
+        graphic.attributes = lotePun.attributes;
+        graphic.geometry = lotePun.geometry;
+        graphics.push(graphic);
+      });
+      featureLayer.applyEdits(graphics, null, null).then(function (adds) {
+        deferred.resolve(adds);
+      }, function (err) {
+        deferred.reject(err);
+      });
+      return deferred.promise;
+    },
+    _getPrediosOrig: function _getPrediosOrig(lote) {
+      var deferred = new Deferred();
+      var urlPredios = selfCm.layersMap.getLayerInfoById(idLyrCfPredios).getUrl();
+      var queryTask = new QueryTask(urlPredios);
+      // Construye la query
+      var query = new Query();
+      query.returnGeometry = true;
+      query.outFields = ["*"];
+      query.geometry = lote.geometry;
+      query.geometryType = "esriGeometryPolygon";
+      queryTask.execute(query).then(function (response) {
+        if (response.features.length > 0) {
+          deferred.resolve(response.features);
+        } else {
+          deferred.reject("No se encontraron Predios para este lote");
+        }
+      }, function (error) {
+        deferred.reject(error);
+      });
+      return deferred.promise;
+    },
+    _prediosToHis: function _prediosToHis(prediosOrig) {
+      var deferred = new Deferred();
+      var featureLayer = new FeatureLayer("https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_H/FeatureServer/0");
+
+      var graphics = [];
+      prediosOrig.forEach(function (predioOrig) {
+        var graphic = new Graphic();
+        graphic.attributes = predioOrig.attributes;
+        graphic.geometry = predioOrig.geometry;
+        graphics.push(graphic);
+      });
+
+      var graphicsParse = JSON.parse(JSON.stringify(graphics));
+
+      featureLayer.applyEdits(graphics, null, null).then(function (add, update, del) {
+        deferred.resolve(graphicsParse);
+      }, function (err) {
+        deferred.reject(err);
+      });
+      return deferred.promise;
+    },
+    _deletePrediosOrig: function _deletePrediosOrig(data) {
+      var deferred = new Deferred();
+      var deleteParams = {
+        where: 'OBJECTID IN (' + data.map(function (i) {
+          return i.attributes.OBJECTID;
+        }) + ')',
+        f: "json"
+      };
+
+      var requestOptions = {
+        url: "https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/FeatureServer/0/deleteFeatures",
+        content: deleteParams,
+        handleAs: "json",
+        callbackParamName: "callback"
+      };
+
+      esriRequest(requestOptions, {
+        usePost: true
+      }).then(function (response) {
+        deferred.resolve(response.deleteResults);
+      }, function (error) {
+        deferred.reject(error);
+      });
+      return deferred.promise;
+    },
+    _addPrediosNew: function _addPrediosNew(predio) {
+      var deferred = new Deferred();
+      var addFeatureUrl = "https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/FeatureServer/0/addFeatures";
+
+      var params = {
+        features: JSON.stringify([predio]), // Convertir el objeto de entidad a una cadena JSON
+        f: "json"
+      };
+
+      var options = {
+        url: addFeatureUrl,
+        content: params,
+        handleAs: "json",
+        callbackParamName: "callback"
+      };
+
+      esriRequest(options, {
+        usePost: true
+      }).then(function (response) {
+        if (response.addResults && response.addResults.length > 0) {
+          deferred.resolve(predio);
+        } else {
+          deferred.reject(response);
+        }
+      }, function (error) {
+        deferred.reject(error);
+      });
+      return deferred.promise;
+    },
+    _updateStatusRequests: function _updateStatusRequests(predioResult) {
+      _FIELDS_RESPONSE = ["COD_PRE", "COD_CPU", "COD_SECT", "COD_MZN", "COD_LOTE", "COD_UU", "COD_VIA", "TIPO_UU", "NOM_UU", "NOM_REF", "MZN_URB", "LOT_URB", "TIP_VIA", "NOM_VIA", "CUADRA", "LADO", "DIR_MUN", "DIR_URB", "COORD_X", "COORD_Y", "RAN_CPU", "COD_UI", "COD_VER"];
+
+      // la lista predioResults contiene objetos con una propiedad attributes, necesito que todos los objetos tengan solo las propiedades que necesito de acuerdo a la lista _FIELDS_RESPONSE
+      var predioResult2 = predioResult.map(function (predio) {
+        var predio2 = {};
+        _FIELDS_RESPONSE.forEach(function (field) {
+          predio2[field] = predio.attributes[field];
+        });
+        return predio2;
+      });
+
+      var response = {
+        "id": selfCm.codRequestsCm,
+        "results": predioResult2
+      };
+
+      console.log(response);
+
+      selfCm._sendDataToPlatform(response);
     },
     onOpen: function onOpen() {
       console.log('CartoMaintenanceWgt::onOpen');
