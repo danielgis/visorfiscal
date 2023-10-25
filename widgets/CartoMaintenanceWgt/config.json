@@ -3,9 +3,9 @@
   "acumulacionUrl": "https://ws.mineco.gob.pe/serverdf/rest/services/geoprocesos/acumulacion_predio_11/GPServer/Acumulacion%20de%20predios",
   "subdivisionUrl": "https://ws.mineco.gob.pe/serverdf/rest/services/geoprocesos/subdivision_predio_10/GPServer/Subdivision%20de%20predios",
   "inactivacionUrl": "https://ws.mineco.gob.pe/serverdf/rest/services/geoprocesos/inactivacion_predio_3/GPServer/Inactivacion%20de%20predio",
-  "applicationListUrl": "https://catastro-fiscal.codtree.com/api/v1/maintenance/application",
-  "landsByApplicationUrl": "https://catastro-fiscal.codtree.com/api/v1/maintenance/land/lands-by-application",
-  "observationUrl": "https://catastro-fiscal.codtree.com/api/v1/maintenance/observation/",
-  "resultsByApplication": "https://catastro-fiscal.codtree.com/api/v1/maintenance/result/results-by-application",
-  "updateStatusApplication": "https://catastro-fiscal.codtree.com/api/v1/maintenance/application/update-application-attended/"
+  "applicationListUrl": "https://catastromef.apistoring.com/catastroback/api/v1/maintenance/application",
+  "landsByApplicationUrl": "https://catastromef.apistoring.com/catastroback/api/v1/maintenance/land/lands-by-application",
+  "observationUrl": "https://catastromef.apistoring.com/catastroback/api/v1/maintenance/land/lands-by-application",
+  "resultsByApplication": "https://catastromef.apistoring.com/catastroback/api/v1/maintenance/result/results-by-application",
+  "updateStatusApplication": "https://catastromef.apistoring.com/catastroback/api/v1/maintenance/application/update-application-attended/"
 }
