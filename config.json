@@ -18,7 +18,7 @@
       "useLogo": false
     }
   },
-  "portalUrl": "https://ws.mineco.gob.pe/portaldf/",
+  "portalUrl": "https://ws.mineco.gob.pe/portaldf",
   "appId": "",
   "authorizedCrossOriginDomains": [],
   "title": "Mantenimiento Cartográfico",
@@ -142,7 +142,9 @@
           "relativeTo": "browser"
         },
         "id": "widgets_AttributeTable_Widget_50",
-        "name": "AttributeTable"
+        "name": "AttributeTable",
+        "config": "configs/AttributeTable/config_widgets_AttributeTable_Widget_50.json",
+        "visible": false
       },
       {
         "uri": "widgets/Splash/Widget",
