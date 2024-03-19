@@ -1,0 +1,17 @@
+{
+  "reasignacionUrl": "https://ws.mineco.gob.pe/serverdf/rest/services/geoprocesos/reasignacion_predio_6/GPServer/Reasignacion%20de%20predio",
+  "acumulacionUrl": "https://ws.mineco.gob.pe/serverdf/rest/services/geoprocesos/acumulacion_predio_11/GPServer/Acumulacion%20de%20predios",
+  "subdivisionUrl": "https://ws.mineco.gob.pe/serverdf/rest/services/geoprocesos/subdivision_predio_10/GPServer/Subdivision%20de%20predios",
+  "inactivacionUrl": "https://ws.mineco.gob.pe/serverdf/rest/services/geoprocesos/inactivacion_predio_3/GPServer/Inactivacion%20de%20predio",
+  "applicationListUrl": "https://vmd120205.contaboserver.net/api/v1/maintenance/application",
+  "landsByApplicationUrl": "https://vmd120205.contaboserver.net/api/v1/maintenance/land/lands-by-application",
+  "observationUrl": "https://vmd120205.contaboserver.net/api/v1/maintenance/observation/",
+  "resultsByApplication": "https://vmd120205.contaboserver.net/api/v1/maintenance/result/results-by-application",
+  "updateStatusApplication": "https://vmd120205.contaboserver.net/api/v1/maintenance/application/update-application-attended/",
+  "lotHistoricUrl": "https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_H/FeatureServer/2",
+  "pointLotHistoricUrl": "https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_H/FeatureServer/1",
+  "landHistoricUrl": "https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL_H/FeatureServer/0",
+  "lotUrl": "https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/FeatureServer/5",
+  "pointLotUrl": "https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/FeatureServer/1",
+  "landUrl": "https://ws.mineco.gob.pe/serverdf/rest/services/pruebas/CARTO_FISCAL/FeatureServer/0"
+}

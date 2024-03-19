@@ -1,23 +1,25 @@
-#main-loading{
-	background-color:#000000;
-	position:relative;
+#main-loading {
+	background-color: #000000;
+	position: relative;
 }
-#main-loading #app-loading{
+
+#main-loading #app-loading {
 	position: absolute;
 	background-image: url('images/background.png');
 	background-repeat: no-repeat;
-	width:646px;
-	height:248px;
+	width: 646px;
+	height: 248px;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
 }
-#main-loading #loading-gif{
+
+#main-loading #loading-gif {
 	position: absolute;
 	background-image: url('images/predefined_loading_2.gif');
 	background-repeat: no-repeat;
-	width:58px;
-	height:10px;
+	width: 58px;
+	height: 10px;
 	top: 65%;
 	left: 50%;
 	transform: translate(-50%, -50%);

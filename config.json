@@ -1,27 +1,24 @@
 {
   "theme": {
-    "name": "FoldableTheme",
+    "name": "JewelryBoxTheme",
     "styles": [
-      "yellow",
       "black",
       "default",
-      "blue",
-      "cyan",
       "green",
+      "cyan",
+      "red",
       "purple",
-      "red"
+      "blue",
+      "yellow"
     ],
     "version": "2.26",
     "sharedTheme": {
       "isPortalSupport": false,
       "useHeader": false,
       "useLogo": false
-    },
-    "customStyles": {
-      "mainBackgroundColor": "#000000"
     }
   },
-  "portalUrl": "https://ws.mineco.gob.pe/portaldf",
+  "portalUrl": "https://ws.mineco.gob.pe/portaldf/",
   "appId": "",
   "authorizedCrossOriginDomains": [],
   "title": "Mantenimiento Cartográfico",
@@ -33,7 +30,7 @@
   "widgetOnScreen": {
     "widgets": [
       {
-        "uri": "themes/FoldableTheme/widgets/HeaderController/Widget",
+        "uri": "themes/JewelryBoxTheme/widgets/HeaderController/Widget",
         "position": {
           "left": 0,
           "top": 0,
@@ -42,7 +39,7 @@
           "relativeTo": "browser"
         },
         "version": "2.26",
-        "id": "themes_FoldableTheme_widgets_HeaderController_Widget_1",
+        "id": "themes_JewelryBoxTheme_widgets_HeaderController_Widget_40",
         "name": "HeaderController"
       },
       {
@@ -53,7 +50,7 @@
           "relativeTo": "map"
         },
         "version": "2.26",
-        "id": "widgets_Scalebar_Widget_2",
+        "id": "widgets_Scalebar_Widget_41",
         "name": "Scalebar"
       },
       {
@@ -64,7 +61,7 @@
           "relativeTo": "map"
         },
         "version": "2.26",
-        "id": "widgets_Search_Widget_3",
+        "id": "widgets_Search_Widget_42",
         "name": "Search"
       },
       {
@@ -75,7 +72,7 @@
           "relativeTo": "map"
         },
         "version": "2.26",
-        "id": "widgets_Coordinate_Widget_4",
+        "id": "widgets_Coordinate_Widget_43",
         "name": "Coordinate"
       },
       {
@@ -85,16 +82,7 @@
           "relativeTo": "map"
         },
         "placeholderIndex": 1,
-        "id": "_5",
-        "name": "CartoMaintenanceWgt",
-        "version": "0.0.1",
-        "closeable": true,
-        "IsController": false,
-        "uri": "widgets/CartoMaintenanceWgt/Widget",
-        "config": "configs/CartoMaintenanceWgt/config__5.json",
-        "label": "Bandeja de actualizaciones",
-        "openAtStart": true,
-        "icon": "configs\\CartoMaintenanceWgt\\icon__5.png"
+        "id": "_44"
       },
       {
         "position": {
@@ -102,13 +90,8 @@
           "top": 45,
           "relativeTo": "map"
         },
-        "placeholderIndex": 1,
-        "id": "_6",
-        "name": "Measurement",
-        "version": "2.26",
-        "closeable": true,
-        "uri": "widgets/Measurement/Widget",
-        "config": "configs/Measurement/config__6.json"
+        "placeholderIndex": 2,
+        "id": "_45"
       },
       {
         "position": {
@@ -116,37 +99,18 @@
           "top": 45,
           "relativeTo": "map"
         },
-        "placeholderIndex": 1,
-        "id": "_7"
-      },
-      {
-        "position": {
-          "left": 205,
-          "top": 45,
-          "relativeTo": "map"
-        },
-        "placeholderIndex": 2,
-        "id": "_8"
-      },
-      {
-        "position": {
-          "left": 255,
-          "top": 45,
-          "relativeTo": "map"
-        },
         "placeholderIndex": 3,
-        "id": "_9"
+        "id": "_46"
       },
       {
         "uri": "widgets/OverviewMap/Widget",
         "position": {
-          "bottom": 0,
           "right": 0,
-          "zIndex": 1,
+          "bottom": 0,
           "relativeTo": "map"
         },
         "version": "2.26",
-        "id": "widgets_OverviewMap_Widget_10",
+        "id": "widgets_OverviewMap_Widget_47",
         "name": "OverviewMap"
       },
       {
@@ -157,7 +121,7 @@
           "relativeTo": "map"
         },
         "version": "2.26",
-        "id": "widgets_HomeButton_Widget_11",
+        "id": "widgets_HomeButton_Widget_48",
         "name": "HomeButton"
       },
       {
@@ -168,19 +132,17 @@
           "relativeTo": "map"
         },
         "version": "2.26",
-        "id": "widgets_MyLocation_Widget_12",
+        "id": "widgets_MyLocation_Widget_49",
         "name": "MyLocation"
       },
       {
         "uri": "widgets/AttributeTable/Widget",
+        "version": "2.26",
         "position": {
           "relativeTo": "browser"
         },
-        "version": "2.26",
-        "id": "widgets_AttributeTable_Widget_13",
-        "name": "AttributeTable",
-        "config": "configs/AttributeTable/config_widgets_AttributeTable_Widget_13.json",
-        "visible": false
+        "id": "widgets_AttributeTable_Widget_50",
+        "name": "AttributeTable"
       },
       {
         "uri": "widgets/Splash/Widget",
@@ -189,7 +151,7 @@
           "relativeTo": "browser"
         },
         "version": "2.26",
-        "id": "widgets_Splash_Widget_14",
+        "id": "widgets_Splash_Widget_51",
         "name": "Splash"
       },
       {
@@ -200,32 +162,62 @@
           "relativeTo": "map"
         },
         "version": "2.26",
-        "id": "widgets_ZoomSlider_Widget_15",
+        "id": "widgets_ZoomSlider_Widget_52",
         "name": "ZoomSlider"
       },
       {
         "uri": "widgets/ExtentNavigate/Widget",
         "visible": false,
         "position": {
-          "top": 190,
+          "top": 148,
           "left": 7,
           "relativeTo": "map"
         },
-        "id": "widgets_ExtentNavigate_Widget_16",
-        "name": "ExtentNavigate",
-        "version": "2.26"
+        "version": "2.26",
+        "id": "widgets_ExtentNavigate_Widget_53",
+        "name": "ExtentNavigate"
       },
       {
         "uri": "widgets/FullScreen/Widget",
         "visible": false,
         "position": {
-          "top": 150,
-          "left": 7,
+          "right": 8,
+          "top": 8,
           "relativeTo": "map"
         },
         "version": "2.26",
-        "id": "widgets_FullScreen_Widget_17",
+        "id": "widgets_FullScreen_Widget_54",
         "name": "FullScreen"
+      }
+    ],
+    "groups": [
+      {
+        "visible": false,
+        "panel": {
+          "uri": "themes/JewelryBoxTheme/panels/LDockablePanel/Panel",
+          "position": {
+            "left": 0,
+            "top": 40,
+            "bottom": 0,
+            "width": 430,
+            "relativeTo": "browser"
+          }
+        },
+        "maxWidgets": 1,
+        "placeholderIndex": 1,
+        "id": "_39",
+        "widgets": [
+          {
+            "name": "CartoMaintenanceWgt",
+            "version": "0.0.1",
+            "IsController": false,
+            "uri": "widgets/CartoMaintenanceWgt/Widget",
+            "config": "configs/CartoMaintenanceWgt/config_widgets_CartoMaintenanceWgt_Widget_55.json",
+            "id": "widgets_CartoMaintenanceWgt_Widget_55"
+          }
+        ],
+        "label": "Grupo 0",
+        "icon": "widgets/CartoMaintenanceWgt/images/icon.png?wab_dv=2.26"
       }
     ],
     "panel": {
@@ -254,7 +246,7 @@
   },
   "widgetPool": {
     "panel": {
-      "uri": "themes/FoldableTheme/panels/FoldablePanel/Panel",
+      "uri": "themes/JewelryBoxTheme/panels/FoldablePanel/Panel",
       "position": {
         "top": 5,
         "right": 5,
@@ -291,20 +283,164 @@
   },
   "mobileLayout": {
     "widgetOnScreen": {
-      "widgets": {
-        "widgets/Scalebar/Widget": {
+      "widgets": [
+        {
+          "uri": "themes/JewelryBoxTheme/widgets/HeaderController/Widget",
           "position": {
-            "left": 7,
-            "bottom": 40
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "height": 40,
+            "relativeTo": "browser"
           },
-          "version": "1.4"
+          "version": "2.26"
         },
-        "widgets/Coordinate/Widget": {
+        {
+          "uri": "widgets/Scalebar/Widget",
           "position": {
             "left": 7,
-            "bottom": 17
+            "bottom": 40,
+            "relativeTo": "map"
           },
-          "version": "1.4"
+          "version": "2.26"
+        },
+        {
+          "uri": "widgets/Search/Widget",
+          "position": {
+            "left": 55,
+            "top": 5
+          },
+          "version": "2.26"
+        },
+        {
+          "uri": "widgets/Coordinate/Widget",
+          "position": {
+            "left": 7,
+            "bottom": 17,
+            "relativeTo": "map"
+          },
+          "version": "2.26"
+        },
+        {
+          "position": {
+            "left": 55,
+            "top": 45
+          }
+        },
+        {
+          "position": {
+            "left": 105,
+            "top": 45
+          }
+        },
+        {
+          "position": {
+            "left": 155,
+            "top": 45
+          }
+        },
+        {
+          "uri": "widgets/OverviewMap/Widget",
+          "position": {
+            "right": 0,
+            "bottom": 0
+          },
+          "version": "2.26"
+        },
+        {
+          "uri": "widgets/HomeButton/Widget",
+          "inPanel": false,
+          "position": {
+            "left": 7,
+            "top": 75
+          },
+          "version": "2.26"
+        },
+        {
+          "uri": "widgets/MyLocation/Widget",
+          "inPanel": false,
+          "position": {
+            "left": 7,
+            "top": 110
+          },
+          "version": "2.26"
+        },
+        {
+          "uri": "widgets/AttributeTable/Widget",
+          "version": "2.26",
+          "position": {
+            "relativeTo": "browser"
+          }
+        },
+        {
+          "uri": "widgets/Splash/Widget",
+          "visible": false,
+          "position": {
+            "relativeTo": "browser"
+          },
+          "version": "2.26"
+        },
+        {
+          "uri": "widgets/ZoomSlider/Widget",
+          "visible": true,
+          "position": {
+            "top": 5,
+            "left": 7
+          },
+          "version": "2.26"
+        },
+        {
+          "uri": "widgets/ExtentNavigate/Widget",
+          "visible": false,
+          "position": {
+            "top": 148,
+            "left": 7
+          },
+          "version": "2.26"
+        },
+        {
+          "uri": "widgets/FullScreen/Widget",
+          "visible": false,
+          "position": {
+            "right": 8,
+            "top": 8
+          },
+          "version": "2.26"
+        }
+      ],
+      "groups": [
+        {
+          "visible": false,
+          "panel": {
+            "uri": "themes/JewelryBoxTheme/panels/LDockablePanel/Panel",
+            "position": {
+              "left": 0,
+              "top": 40,
+              "bottom": 0,
+              "width": 360,
+              "relativeTo": "browser"
+            }
+          },
+          "maxWidgets": 1
+        }
+      ]
+    },
+    "map": {
+      "position": {
+        "left": 0,
+        "top": 40,
+        "right": 0,
+        "bottom": 0
+      }
+    },
+    "widgetPool": {
+      "panel": {
+        "uri": "themes/JewelryBoxTheme/panels/FoldablePanel/Panel",
+        "position": {
+          "top": 5,
+          "right": 5,
+          "bottom": 5,
+          "zIndex": 5
         }
       }
     }

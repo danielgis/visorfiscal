@@ -10,6 +10,10 @@
   #ECECEC: #ECECEC;
 } */
 
+/* .jimu-ldockable-panel {
+  width: 430px !important;
+} */
+
 .carto-maintenance-wgt h3 {
   font-size: 1.2em;
 }
@@ -22,6 +26,9 @@ p {
 .carto-maintenance-wgt {
   height: 100%;
   width: 100%;
+  font-size: .875rem;
+  font-family: Inter var, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color emoji;
+  color: #1e293b;
 }
 
 .jimu-widget-frame.jimu-container {
@@ -208,6 +215,7 @@ p {
   height: 100%;
   display: flex;
   flex-direction: column;
+  position: relative;
   /* display: none; */
 }
 
@@ -217,6 +225,8 @@ p {
   width: 100%;
   height: 30px;
   background-color: #E9F6FF;
+  position: sticky;
+  top: 0;
 }
 
 .backTrayClsCm,
@@ -300,31 +310,63 @@ p {
   box-shadow: 0px 0px 10px #C3C3C3;
 }
 
+
 .headPredInfoClsCm {
   display: flex;
   flex-direction: row;
-  background-color: #0090F8;
   height: 30px;
   border-radius: 5px 5px 0px 0px;
-}
-
-/* .headPredInfoClsCm:hover{
-  cursor: pointer;
-} */
-
-.headPredInfoClsCm {
   cursor: pointer;
   width: 100%;
   color: white;
-  display: flex;
-  padding: 10px;
+  padding: 7px;
 }
+
+.headPredInfoOriginalClsCm,
+.headObsevationClsCm {
+  background-color: #0090F8;
+}
+
+
+.headPredInfoResultClsCm {
+  background-color: #c14242;
+}
+
+/* .headPredInfoResultClsCm span {
+  font-weight: bold;
+  font-size: 14px;
+} */
 
 .headPredInfoClsCm span {
   /* align-self: center; */
   font-weight: bold;
   font-size: 14px;
+  width: 100%;
 }
+
+.toolsPredInfoClsCm {
+  height: 100%;
+  border: none;
+  background-color: inherit;
+  width: 25px;
+  padding: 0;
+  color: white;
+  text-align: right;
+}
+
+.toolsPredInfoClsCm:hover {
+  cursor: pointer;
+}
+
+.zoomPredInfoClsCm {
+  display: none;
+}
+
+.zoomPredInfoClsCm.active {
+  display: block;
+}
+
+
 
 /*  */
 .coordsCtnClsCm {
@@ -345,8 +387,10 @@ p {
 /* style for label into class bodyPredInfoClsCm */
 .bodyPredInfoClsCm label {
   margin-bottom: 5px;
-  /* font-weight: bold;
-  font-size: 14px; */
+}
+
+.bodyPredInfoClsCm.active {
+  display: flex;
 }
 
 .bodyPredInfoClsCm input {
@@ -375,7 +419,8 @@ p {
 }
 
 .bodyPredInfoClsCm {
-  display: flex;
+  display: none;
+  /* display: flex; */
   flex-direction: column;
   border: 1px solid #e5e3e3;
   border-top: none;
@@ -407,9 +452,11 @@ p {
 
 .showOtherDocClsCm {
   background-color: inherit;
-  border: none;
+  /* border: none; */
+  border: solid 1px #ccc;
+  border-radius: 3px;
   color: #0090F8;
-  height: 20px;
+  height: 30px;
   width: 30px;
 }
 
@@ -442,6 +489,14 @@ p {
   /* text-indent: 10px; */
 }
 
+.ctnResults {
+  width: 100%;
+}
+
+.ctnGraphLandsResultsClsCm {
+  width: 100%;
+}
+
 .ctnBtnParamCm {
   width: 20%;
   text-align: right;
@@ -453,7 +508,7 @@ p {
   /* border: none; */
   background-color: inherit;
   width: 30px;
-  height: 20px;
+  height: 30px;
 }
 
 .btnParamsClsCm:hover {
@@ -466,7 +521,7 @@ p {
   border-radius: 5px;
   background-color: #66BB6A;
   color: white;
-  height: 25px;
+  height: 30px;
   margin-top: 10px;
   align-self: end;
 }
@@ -661,6 +716,11 @@ input[type='file'] {
   top: 0;
 }
 
+.tableClsCm tr:hover {
+  background-color: #eeeeee;
+  cursor: pointer;
+}
+
 .center-aligned {
   text-align: center;
 }
@@ -696,4 +756,8 @@ input[type='file'] {
 .activeButton {
   color: #0090F8;
   border-color: #0090F8;
+}
+
+.pointLotSelectionCm {
+  width: 100px;
 }
