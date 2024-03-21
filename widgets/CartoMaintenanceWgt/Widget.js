@@ -729,14 +729,6 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
             responseResults = _ref2[1],
             responseDocSupport = _ref2[2];
 
-        // populate original
-        // if (responseOriginal.results.length == 0) {
-        //   // Escribir mensaje de error
-        //   selfCm._showMessage(`No existe registro de los predios asociados a esta solicitud: ${idSolicitud}`, type = "error");
-        //   selfCm.busyIndicator.hide();
-        //   return
-        // }
-
         var rows = selfCm.currentLandTabRows.map(function (i) {
           return CaseInfo.contentCard(i, 'original');
         });
@@ -764,25 +756,6 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
         }).join(',');
 
         selfCm.responseRequests = responseResults['results'];
-
-        // // ---------------------------------------------------------
-        // // @danielgis
-        // // Comentar la siguiente linea en produccion
-        // selfCm.responseRequests = [
-        //   {
-        //     "address": "02 MIGUEL GRAU 12  Mz.G  Lote 22",
-        //     "cpm": "17350001",
-        //     "urbanLotNumber": "22",
-        //     "tipPred": "1"
-        //   },
-        //   {
-        //     "address": "02 MIGUEL GRAU 14  Mz.G  Lote 23 (aires)",
-        //     "cpm": "17350002",
-        //     "urbanLotNumber": "2",
-        //     "tipPred": "3"
-        //   }
-        // ]
-        // // ---------------------------------------------------------
       }).then(function () {
         switch (selfCm.case) {
           case "1":
@@ -793,15 +766,6 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
             break;
           case "3":
             selfCm.divisionApCm.classList.toggle('active');
-            // selfCm.ctnGraphLandsResultsApCm.innerHTML = ''
-            // LandAssignment.title = "Subdivisión";
-            // LandAssignment.lands = [];
-            // LandAssignment.pointLots = [];
-            // LandAssignment.map = selfCm.map;
-            // LandAssignment.landsSymbol = symbolPredio;
-            // LandAssignment.landsSymbolSelected = symbolPredioSelected2;
-            // LandAssignment.removeAllGraphics();
-            // selfCm.ctnGraphLandsResultsApCm.appendChild(LandAssignment.renderTableLandAssignment());
             break;
           case "4":
             selfCm.eliminacionApCm.classList.toggle('active');
@@ -809,9 +773,6 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
           case "5":
             selfCm.independenceApCm.classList.toggle('active');
             selfCm.independenceApCm.innerHTML = '';
-            // graphicLayerLandsByIndependence.clear();
-            // LandMatrix.matrixLand = selfCm.currentLandTabRows;
-            // selfCm.independenceApCm.appendChild(LandMatrix.renderTableMatrixLand());
             LandAssignment.title = "Independización";
             LandAssignment.lands = selfCm.responseRequests;
             LandAssignment.pointLots = selfCm.currentPoinLotsRows;
@@ -861,37 +822,8 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
 
         selfCm.case = evt.currentTarget.value;
         selfCm._requestCaseInfo(selfCm.codRequestsCm);
-
-        // switch (selfCm.case) {
-        //   case "1":
-        //     selfCm.reasignarApCm.classList.toggle('active')
-        //     break;
-        //   case "2":
-        //     selfCm.fusionApCm.classList.toggle('active')
-        //     break
-        //   case "3":
-        //     selfCm.divisionApCm.classList.toggle('active')
-        //     break
-        //   case "4":
-        //     selfCm.eliminacionApCm.classList.toggle('active')
-        //     break
-        //   default:
-        //     break;
-        // }
-
-        // // selfCm.codigosPredios = rowList[2]
-        // // selfCm._zoomHomeRequests()
-        // selfCm.resultCtnApCm.classList.remove('active')
-        // selfCm.obsCtnApCm.classList.remove('active')
-        // selfCm.requestTrayApCm.classList.remove('active')
-        // selfCm.casesCtnApCm.classList.toggle('active')
-
-
-        // selfCm._populateFormsByPredio(selfCm.codRequestsCm)
-        // selfCm._loadDocSupportCm()
       } else if (evt.currentTarget.id == 'backTrayCm' || evt.currentTarget.id == 'backTrayResultCm') {
         // desactivar el toolbarCm de edicion si esta activado
-        // toolbarCm.deactivate()
         toolbarCm.deactivate();
 
         // deshabilitar snapping
@@ -940,10 +872,6 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
       var urlPredioResults = selfCm.config.resultsByApplication + '/' + id_solicitud;
       selfCm._callApiRestServices(urlPredioResults, {}).then(function (response) {
         try {
-          // ----------------------------------------------------
-          // Comentar esta linea cuando se consuma el servicio
-          // response = responseDivision[id_solicitud]
-          // ----------------------------------------------------
           selfCm.bodyTbResultsApCm.innerHTML = '';
           dojo.query("#titleCaseResult")[0].innerHTML = '<span>Solicitud ' + id_solicitud + ': ' + caseCm + '</span>';
 
@@ -1266,11 +1194,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
       selfCm._removeLayerGraphic(idGraphicPuntoLote);
       selfCm._removeLayerGraphic(idGraphicFrenteLote);
       selfCm._removeLayerGraphic(idGraphicLabelCodLote);
-      // selfCm.bodyTbDatosLoteDvApCm.innerHTML = ''
-      // selfCm.bodyTbPrediosDvApCm.innerHTML = ''
       graphicLayerPredioByDivison.clear();
-      // graphicLayerLineaDivision.graphics = graphics;
-      // selfCm.map.removeLayer(self_lw.map.getLayer(id));
       elem[0].parentNode.removeChild(elem[0]);
     },
     _addNameToLine: function _addNameToLine(name, polylineGeom) {

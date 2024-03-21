@@ -14,6 +14,7 @@ define(["dojo/Deferred", "esri/tasks/QueryTask", "esri/tasks/query", "esri/reque
         config: null, // @calculate
         matrixLandDomain: '2',
         caseRequest: null, // @param
+        currentLotsRows: null, //@param
 
 
         getMatrixLand: function getMatrixLand() {
@@ -36,6 +37,7 @@ define(["dojo/Deferred", "esri/tasks/QueryTask", "esri/tasks/query", "esri/reque
             return deferred.promise;
         },
         getUiOfLot: function getUiOfLot() {
+            var LotCls = new UtilityCase.Lot();
             var deferred = new Deferred();
             var LandCls = new UtilityCase.Land();
             var queryTask = new QueryTask(this.urlLands);
@@ -47,7 +49,7 @@ define(["dojo/Deferred", "esri/tasks/QueryTask", "esri/tasks/query", "esri/reque
             statDefCodUi.outStatisticFieldName = LandCls.codUi + "_MAX";
             query.outStatistics = [statDefCodUi];
 
-            query.geometry = this.currentLotsRows[0].geometry;
+            query.where = LotCls.idLotP + " = '" + this.currentLotsRows[0].attributes[LotCls.idLotP] + "' and " + LotCls.ubigeo + " = '" + this.ubigeo + "'";
 
             queryTask.execute(query).then(function (result) {
                 var uiValue = result.features[0].attributes[LandCls.codUi + "_MAX"] + 1;
@@ -97,7 +99,8 @@ define(["dojo/Deferred", "esri/tasks/QueryTask", "esri/tasks/query", "esri/reque
                     landProps.attributes[LotCls.nomUser] = _this2.user;
                     landProps.attributes[LandCls.tipPred] = land.tipPred;
                     landProps.attributes[LandCls.codVer] = UtilityCase.getValueCodVer(landProps.attributes[LandCls.ranCpu], uiValue);
-                    landProps.attributes[LandCls.codCpu] = UtilityCase.generateCodCpu(landProps.attributes[LandCls.ranCpu], landProps.attributes[LandCls.codVer]);
+                    landProps.attributes[LandCls.codCpu] = UtilityCase.generateCodCpu(landProps.attributes[LandCls.ranCpu], landProps.attributes[LandCls.codVer], codUi = uiValue);
+
                     landProps.attributes[LandCls.dirMun] = UtilityCase.generateDirMun(landProps.attributes[LandCls.tipVia], landProps.attributes[LandCls.nomVia], landProps.attributes[LandCls.numMun]);
                     landProps.attributes[LandCls.dirUrb] = UtilityCase.generateDirUrb(landProps.attributes[LandCls.tipVia], landProps.attributes[LandCls.nomVia], landProps.attributes[LandCls.numMun]);
                     landProps.geometry = land.pointLot.geometry;
@@ -122,9 +125,7 @@ define(["dojo/Deferred", "esri/tasks/QueryTask", "esri/tasks/query", "esri/reque
             }).then(function (lands) {
                 _this3.lands = lands;
                 return UtilityCase.addDataNew([], [], lands, _this3.config);
-            })
-            // .then(lands => UtilityCase.addDataNew([], [], lands, this.config))
-            .then(function (lands) {
+            }).then(function (lands) {
                 return _this3.getMatrixLand();
             }).then(function (matrixLand) {
                 return _this3.updateMatrixLand(matrixLand);
@@ -133,7 +134,7 @@ define(["dojo/Deferred", "esri/tasks/QueryTask", "esri/tasks/query", "esri/reque
             }).then(function (result) {
                 return console.log(result);
             }).catch(function (err) {
-                return console.log(err);
+                return err;
             });
         }
     };

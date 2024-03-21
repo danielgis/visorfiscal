@@ -407,7 +407,10 @@ define(["dojo/Deferred", "esri/tasks/QueryTask", "esri/tasks/query", "esri/tasks
             return deferred.promise;
         },
         generateCodCpu: function generateCodCpu(ranCpu, codVer) {
-            return ranCpu + "-0001-" + codVer;
+            var codUi = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
+
+            codUi = ("0000" + codUi.toString()).slice(-4);
+            return ranCpu + "-" + codUi + "-" + codVer;
         },
         generateDirMun: function generateDirMun(tipVia, nomVia, numMun) {
             return tipVia + " " + nomVia + " " + numMun;
