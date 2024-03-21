@@ -132,7 +132,7 @@ define(["dojo/Deferred", "esri/tasks/QueryTask", "esri/tasks/query", "esri/reque
             }).then(function (results) {
                 return UtilityCase.updateStatusRequests(_this3.lands, _this3.codRequest, _this3.caseRequest, _this3.ubigeo, _this3.config);
             }).then(function (result) {
-                return console.log(result);
+                return result;
             }).catch(function (err) {
                 return err;
             });

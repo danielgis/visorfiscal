@@ -25,7 +25,8 @@ define({
 
     errorLotQuery: 'No se encontró el lote especificado',
     errorDivideLot: 'Las líneas de corte proporcionadas no logran dividir el lote.\nAsegúrate de que las líneas corten completamente el perímetro del lote o que comiencen y terminen en los bordes del mismo.',
-    errorGetLand: 'No se encontró ningún predio asociado a esta solicitud'
+    errorGetLand: 'No se encontró ningún predio asociado a esta solicitud',
+    warningExecute: 'Procesando...\nPor favor, no actualice ni cierre la aplicación.'
   }
   // add supported locales below:
   // , "zh-cn": true

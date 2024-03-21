@@ -636,7 +636,6 @@ define(["dojo/Deferred", "esri/tasks/QueryTask", "esri/tasks/query", "esri/tasks
             return deferred.promise;
         },
         updateStatusRequests: function updateStatusRequests(lands, codRequests, caseRequest, ubigeo, config) {
-            console.log(lands);
             var deferred = new Deferred();
             var responseLands = UtilityCase.matchWithReceptionModel(lands);
             var response = {

@@ -1876,6 +1876,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
 
       selfCm._showMessageConfirm().then(function (result) {
         selfCm.busyIndicator.show();
+        selfCm._addWarningMessageExecute();
         if (result) {
           var labelCodLotesLayerGraphic = labelCodLotesLayer.graphics;
 
@@ -1915,9 +1916,11 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
             selfCm.map.getLayer(idLyrCatastroFiscal).setVisibility(true);
             selfCm._FormResult(selfCm.codRequestsCm, selfCm.caseDescription);
             selfCm.busyIndicator.hide();
+            selfCm._removeWarningMessageExecute();
             selfCm._showMessage("Proceso completado satisfactoriamente", type = "success");
           }).catch(function (error) {
             console.log(error);
+            selfCm._removeWarningMessageExecute();
             selfCm._showMessage(error, type = "error");
             selfCm.busyIndicator.hide();
           });
@@ -1988,6 +1991,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
       selfCm._showMessageConfirm().then(function (result) {
         if (result) {
           selfCm.busyIndicator.show();
+          selfCm._addWarningMessageExecute();
           var labelCodLotesLayerGraphic = labelCodLotesLayer.graphics;
 
           SubDivision.blockUrl = selfCm.layersMap.getLayerInfoById(idLyrCfManzanaUrb).getUrl();
@@ -2030,9 +2034,11 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
             selfCm.map.getLayer(idLyrCatastroFiscal).setVisibility(true);
             selfCm._FormResult(selfCm.codRequestsCm, selfCm.caseDescription);
             selfCm.busyIndicator.hide();
+            selfCm._removeWarningMessageExecute();
             selfCm._showMessage("Proceso completado satisfactoriamente", type = "success");
           }).catch(function (error) {
             console.log(error);
+            selfCm._removeWarningMessageExecute();
             selfCm._showMessage(error, type = "error");
             selfCm.busyIndicator.hide();
           });
@@ -2063,6 +2069,27 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
         }
       });
     },
+    _addWarningMessageExecute: function _addWarningMessageExecute() {
+      var self = this;
+      var buzyElm = dojo.query("#dojox_widget_Standby_0")[0];
+      var imgElm = buzyElm.querySelector("img");
+      var loadingText = document.createElement('div');
+      loadingText.id = 'loadingTextCustom';
+      loadingText.style.position = 'absolute';
+      var topMessage = parseFloat(imgElm.style.top) + 80;
+      loadingText.style.top = topMessage + 'px';
+      var leftImg = parseFloat(imgElm.style.left) + imgElm.width / 2;
+      loadingText.style.left = leftImg + 'px';
+      loadingText.style.transform = 'translate(-50%, -50%)';
+      loadingText.style.background = 'white';
+      loadingText.style.zIndex = '1000';
+      loadingText.innerHTML = self.nls.warningExecute;
+
+      dojo.query("#dojox_widget_Standby_0")[0].appendChild(loadingText);
+    },
+    _removeWarningMessageExecute: function _removeWarningMessageExecute() {
+      dojo.query("#loadingTextCustom")[0].remove();
+    },
     _executeIndependenceLands: function _executeIndependenceLands(evt) {
       if (!LandAssignment.checkPointLotsSelected()) {
         selfCm._showMessage("La solicitud no se puede realizar porque no se selecciono la vía donde se ubica el predio", type = "error");
@@ -2071,6 +2098,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
       selfCm._showMessageConfirm().then(function (result) {
         if (result) {
           selfCm.busyIndicator.show();
+          selfCm._addWarningMessageExecute();
           Independence.codRequest = selfCm.codRequestsCm;
           Independence.cadastralBlockUrl = selfCm.layersMap.getLayerInfoById(idLyrCfManzana).getUrl();
           Independence.ubigeo = paramsApp['ubigeo'];
@@ -2088,9 +2116,11 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
             selfCm.map.getLayer(idLyrCatastroFiscal).setVisibility(true);
             selfCm._FormResult(selfCm.codRequestsCm, selfCm.caseDescription);
             selfCm.busyIndicator.hide();
+            selfCm._removeWarningMessageExecute();
             selfCm._showMessage("Proceso completado satisfactoriamente", type = "success");
           }).catch(function (error) {
             console.log(error);
+            selfCm._removeWarningMessageExecute();
             selfCm._showMessage(error, type = "error");
             selfCm.busyIndicator.hide();
           });
