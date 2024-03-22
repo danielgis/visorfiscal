@@ -435,12 +435,6 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
     _zoomToPredSelectedEvt: function _zoomToPredSelectedEvt(evt) {
       var cod_pred = evt.currentTarget.dataset.codpre;
       return selfCm._zoomToPredSelected(cod_pred);
-      // .then(results => {
-      //   console.log(results)
-      // })
-      // .catch(error => {
-      //   selfCm._showMessage(error.message, type = "error")
-      // })
     },
     _handleFeatureSelected: function _handleFeatureSelected(feature) {
       var featureSelected = new GraphicsLayer({
@@ -451,14 +445,6 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
       selfCm.map.addLayer(featureSelected);
       selfCm.map.centerAt(feature[0].geometry);
 
-      // Parpadeo de seleccion
-      // const interval = setInterval(function () {
-      //   if (featureSelected.graphics[0].symbol === symbolPredioSelected) {
-      //     featureSelected.graphics[0].setSymbol(null);
-      //   } else {
-      //     featureSelected.graphics[0].setSymbol(symbolPredioSelected);
-      //   }
-      // }, 200);
       setTimeout(function () {
         // clearInterval(interval);
         selfCm._removeLayerGraphic(idGraphicPredioSelectedCm);
@@ -2195,7 +2181,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
                 break;
               case "4":
                 // dojo.query(".tablinksCm.active")[0].click();
-                // selfCm._loadIniRequestsCm()
+                selfCm._loadIniRequestsCm();
                 break;
               default:
                 break;
