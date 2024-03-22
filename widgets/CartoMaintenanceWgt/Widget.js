@@ -434,9 +434,39 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
     },
     _zoomToPredSelectedEvt: function _zoomToPredSelectedEvt(evt) {
       var cod_pred = evt.currentTarget.dataset.codpre;
-      selfCm._zoomToPredSelected(cod_pred);
+      return selfCm._zoomToPredSelected(cod_pred);
+      // .then(results => {
+      //   console.log(results)
+      // })
+      // .catch(error => {
+      //   selfCm._showMessage(error.message, type = "error")
+      // })
+    },
+    _handleFeatureSelected: function _handleFeatureSelected(feature) {
+      var featureSelected = new GraphicsLayer({
+        id: idGraphicPredioSelectedCm
+      });
+      feature[0].setSymbol(symbolPredioSelected);
+      featureSelected.add(feature[0]);
+      selfCm.map.addLayer(featureSelected);
+      selfCm.map.centerAt(feature[0].geometry);
+
+      // Parpadeo de seleccion
+      // const interval = setInterval(function () {
+      //   if (featureSelected.graphics[0].symbol === symbolPredioSelected) {
+      //     featureSelected.graphics[0].setSymbol(null);
+      //   } else {
+      //     featureSelected.graphics[0].setSymbol(symbolPredioSelected);
+      //   }
+      // }, 200);
+      setTimeout(function () {
+        // clearInterval(interval);
+        selfCm._removeLayerGraphic(idGraphicPredioSelectedCm);
+      }, 1000);
     },
     _zoomToPredSelected: function _zoomToPredSelected(cod_pred) {
+      selfCm.busyIndicator.show();
+      var deferred = new Deferred();
       selfCm._removeLayerGraphic(idGraphicPredioSelectedCm);
       var prediosLayer = selfCm.layersMap.getLayerInfoById(idLyrCfPredios);
       var propertyLayer = new FeatureLayer(prediosLayer.getUrl(), {
@@ -448,31 +478,19 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
       query.where = _UBIGEO_FIELD + ' = \'' + paramsApp['ubigeo'] + '\' and ' + _COD_PRE_FIELD + ' = \'' + cod_pred + '\'';
 
       // seleccionar la fila
-      propertyLayer.selectFeatures(query, FeatureLayer.SELECTION_NEW, function (results) {
+      propertyLayer.selectFeatures(query, FeatureLayer.SELECTION_NEW).then(function (results) {
         if (results.length == 0) {
-          selfCm._showMessage("No se encontró el predio seleccionado", type = "error");
-          return;
+          throw new Error("No se encontró el predio seleccionado");
         }
-        var featureSelected = new GraphicsLayer({
-          id: idGraphicPredioSelectedCm
-        });
-        featureSelected.add(results[0]);
-        selfCm.map.addLayer(featureSelected);
-        selfCm.map.centerAt(results[0].geometry);
-
-        // Parpadeo de seleccion
-        var interval = setInterval(function () {
-          if (featureSelected.graphics[0].symbol === symbolPredioSelected) {
-            featureSelected.graphics[0].setSymbol(null);
-          } else {
-            featureSelected.graphics[0].setSymbol(symbolPredioSelected);
-          }
-        }, 200);
-        setTimeout(function () {
-          clearInterval(interval);
-          selfCm._removeLayerGraphic(idGraphicPredioSelectedCm);
-        }, 2000);
+        selfCm._handleFeatureSelected(results);
+        selfCm.busyIndicator.hide();
+        return deferred.resolve(results);
+      }).catch(function (error) {
+        selfCm.busyIndicator.hide();
+        selfCm._showMessage(error.message, type = "error");
+        deferred.reject(error);
       });
+      return deferred.promise;
     },
     _openSupportingDocument: function _openSupportingDocument(evt) {
       // check if value is empty
@@ -612,26 +630,6 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
         return i.geometry;
       }));
       this.map.setExtent(unionPredios.getExtent().expand(2));
-
-      // let graphic = new Graphic(unionPredios, symbolLoteSelected);
-      // let featureSelected = new GraphicsLayer({
-      //   id: idGraphicLoteSelectedCm
-      // });
-      // featureSelected.add(graphic);
-      // selfCm.map.addLayer(featureSelected);
-
-      // // Parpadeo de seleccion
-      // let interval = setInterval(function () {
-      //   let graphic = featureSelected.graphics[0];
-      //   graphic.setSymbol(graphic.symbol === symbolLoteSelected ? null : symbolLoteSelected);
-      // }, 200);
-
-      // setTimeout(function () {
-      //   clearInterval(interval);
-      //   selfCm._removeLayerGraphic(idGraphicLoteSelectedCm);
-      // }, 2000);
-      // selfCm.busyIndicator.hide();
-      // return selfCm.map.setExtent(unionPredios.getExtent().expand(2))    
     },
     _zoomExtentToLoteRefactor: function _zoomExtentToLoteRefactor(cod_pre) {
       var query = new Query();
@@ -730,31 +728,38 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
             responseDocSupport = _ref2[2];
 
         var rows = selfCm.currentLandTabRows.map(function (i) {
-          return CaseInfo.contentCard(i, 'original');
+          return CaseInfo.contentCard(i, 'original', active = selfCm.case != 2 ? true : false);
         });
 
-        if (responseResults.results.length == 0) {
-          // Escribir mensaje de error
-          selfCm._showMessage('No existe registro de los predios resultantes en esta solicitud: ' + idSolicitud, type = "error");
-          selfCm.busyIndicator.hide();
-          return;
+        if (selfCm.case != 4) {
+          if (responseResults.results.length == 0) {
+            // Escribir mensaje de error
+            selfCm._showMessage('No existe registro de los predios resultantes en esta solicitud: ' + idSolicitud, type = "error");
+            selfCm.busyIndicator.hide();
+            return;
+          }
         }
 
-        var rowsResults = responseResults.results.map(function (i) {
-          return CaseInfo.contentCard(i, 'result');
-        });
-
         dojo.query("#showInfoDocCm")[0].value = responseDocSupport.support;
-
         dojo.query('.CtnOriginalClsCm')[0].innerHTML = rows.join('');
-        dojo.query('.CtnResultClsCm')[0].innerHTML = rowsResults.join('');
-
         dojo.query(".zoomPredInfoClsCm").on('click', selfCm._zoomToPredSelectedEvt);
+
+        if (selfCm.case != 4) {
+          var rowsResults = responseResults.results.map(function (i) {
+            return CaseInfo.contentCard(i, 'result');
+          });
+          dojo.query('.CtnResultClsCm')[0].innerHTML = rowsResults.join('');
+          dojo.query('.lblResultsClsCm').addClass('active');
+        } else {
+          dojo.query('.CtnResultClsCm')[0].innerHTML = '';
+          dojo.query('.lblResultsClsCm').removeClass('active');
+        }
+
         dojo.query(".colapsePredInfoClsCm").on('click', selfCm._toggleBodyCaseInfo);
+
         selfCm.codigosPredios = selfCm.currentLandTabRows.map(function (i) {
           return i.cpm;
         }).join(',');
-
         selfCm.responseRequests = responseResults['results'];
       }).then(function () {
         switch (selfCm.case) {
@@ -1369,11 +1374,6 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
         codigoCell.appendChild(select);
         row.appendChild(codigoCell);
 
-        // const lyr = selfCm.map.getLayer(idGraphicLabelCodLote)
-        // const graphicSelected = lyr.graphics.filter(item => item.attributes.id == `label_${id}`)
-        // graphicSelected[0].symbol.text = cod_lote
-        // lyr.refresh()
-
         var loteUrbCell = document.createElement('td');
         var loteUrbSelect = document.createElement('select');
         loteUrbSelect.className = "loteUrbSelectDvCls";
@@ -1387,23 +1387,10 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
             option.selected = true;
           }
           // selected option by index predio.num
-
-
-          // if (request.urbanLotNumber === predio.lot_urb) {
-          //   loteUrbSelect.selected = true;
-          // }
         });
         loteUrbCell.appendChild(loteUrbSelect);
         loteUrbCell.className = "loteUrbanoDvCls";
         row.appendChild(loteUrbCell);
-
-        // celda de lote urbano
-        // const loteUrbCell = document.createElement('td');
-        // loteUrbCell.contentEditable = true
-        // loteUrbCell.textContent = '...';
-        // loteUrbCell.id = `loteUrbanoDv_${predio.num}`
-        // loteUrbCell.className = "loteUrbanoDvCls"
-        // row.appendChild(loteUrbCell);
 
         var locationMarker = document.createElement('td');
         locationMarker.id = predio.id;
@@ -1588,10 +1575,6 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
         return;
       }
       var lineGeometry = selfCm._getPolylinesDrawn();
-      // let polygonGeometry = new Polygon({
-      //   rings: selfCm.currentLotsRows[0].geometry.rings,
-      //   spatialReference: { wkid: 4326 }
-      // });
 
       var polygonGeometry = selfCm.currentLotsRows[0].geometry;
 
@@ -1818,11 +1801,6 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
         return selfCm._addGraphicsPointLotsAndArancel();
       }).then(function () {
         selfCm._populateTablePredio(selfCm.bodyTbPrediosDvApCm, selfCm._activateToolPrediosByDivision);
-        // let graphicLayerPuntoLote = selfCm.map.getLayer(idGraphicPuntoLote)
-        // console.log(graphicLayerPuntoLote)
-        // LandAssignment.lands = selfCm.responseRequests;
-        // LandAssignment.pointLots = selfCm.currentPoinLotsRows;
-        // LandAssignment.addRowToTableLandAssignment();
         selfCm.busyIndicator.hide();
       }).catch(function (error) {
         console.log(error);

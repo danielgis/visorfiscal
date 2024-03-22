@@ -761,3 +761,12 @@ input[type='file'] {
 .pointLotSelectionCm {
   width: 100px;
 }
+
+
+.lblResultsClsCm {
+  display: none;
+}
+
+.lblResultsClsCm.active {
+  display: block;
+}
