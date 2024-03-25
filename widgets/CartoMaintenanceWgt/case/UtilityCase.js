@@ -196,6 +196,33 @@ define(["dojo/Deferred", "esri/tasks/QueryTask", "esri/tasks/query", "esri/tasks
 
             return deferred.promise;
         },
+        checkExistLotUrban: function checkExistLotUrban(attributes, block, urlLots) {
+            var deferred = new Deferred();
+            var queryLot = new Query();
+            queryLot.geometry = block.geometry;
+            queryLot.spatialRel = "within";
+            var LotCls = new this.Lot();
+            queryLot.outFields = [LotCls.lotUrb];
+            var queryTaskLot = new QueryTask(urlLots);
+            var lotsUrban = attributes.map(function (attr) {
+                return attr.lotUrb;
+            });
+            queryTaskLot.execute(queryLot).then(function (response) {
+                var lots = response.features.map(function (lot) {
+                    return lot.attributes[LotCls.lotUrb];
+                });
+                var exist = lotsUrban.some(function (lot) {
+                    return lots.includes(lot);
+                });
+                if (exist) {
+                    return deferred.reject("Los lotes urbanos registrados ya se encuentran en la manzana actual");
+                }
+                return deferred.resolve(block);
+            }).catch(function (err) {
+                return deferred.reject(err);
+            });
+            return deferred.promise;
+        },
         translateFieldsBlockToLot: function translateFieldsBlockToLot(url, block, lotsResults) {
             var _this = this;
 

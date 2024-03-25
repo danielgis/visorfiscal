@@ -134,7 +134,7 @@ define(["dojo/Deferred", "esri/tasks/QueryTask", "esri/tasks/query", "esri/reque
             }).then(function (result) {
                 return result;
             }).catch(function (err) {
-                return err;
+                throw err;
             });
         }
     };

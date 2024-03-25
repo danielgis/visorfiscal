@@ -1157,7 +1157,44 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
     },
     _dividePolygon: function _dividePolygon(poly, lines) {
       var divide = geometryEngine.cut(poly, lines);
-      return divide;
+      var response = [];
+      var _iteratorNormalCompletion3 = true;
+      var _didIteratorError3 = false;
+      var _iteratorError3 = undefined;
+
+      try {
+        var _loop = function _loop() {
+          var item = _step3.value;
+
+          item.rings.map(function (i) {
+            var simplePolygon = new Polygon({
+              rings: [i],
+              spatialReference: item.spatialReference
+            });
+            response.push(simplePolygon);
+          });
+        };
+
+        for (var _iterator3 = divide[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+          _loop();
+        }
+      } catch (err) {
+        _didIteratorError3 = true;
+        _iteratorError3 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion3 && _iterator3.return) {
+            _iterator3.return();
+          }
+        } finally {
+          if (_didIteratorError3) {
+            throw _iteratorError3;
+          }
+        }
+      }
+
+      ;
+      return response;
     },
     _populateTableDrawLine: function _populateTableDrawLine(idLine) {
       var row = '<td class="center-aligned">' + selfCm.idxLines + '</td>\n              <td contenteditable="true" id="' + idLine + '_name">' + idLine + '</td>\n              <td class="center-aligned">\n                <span id="' + idLine + '_ext"><i class="fas fa-search"></i></span>\n              </td>\n              <td class="center-aligned">\n                <span id="' + idLine + '_del" style="color: #FF5722;"><i class="far fa-trash-alt"></i></span>\n              </td>';
@@ -1234,13 +1271,13 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
           // --------------------------------------------------------------
           var idx = 1;
           bodyTable.innerHTML = '';
-          var _iteratorNormalCompletion3 = true;
-          var _didIteratorError3 = false;
-          var _iteratorError3 = undefined;
+          var _iteratorNormalCompletion4 = true;
+          var _didIteratorError4 = false;
+          var _iteratorError4 = undefined;
 
           try {
-            for (var _iterator3 = response.results[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-              var predio = _step3.value;
+            for (var _iterator4 = response.results[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+              var predio = _step4.value;
 
               var tr = dojo.create('tr');
               tr.id = 'predio_' + idx + '_' + predio['cpm'];
@@ -1252,16 +1289,16 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
               idx = idx + 1;
             }
           } catch (err) {
-            _didIteratorError3 = true;
-            _iteratorError3 = err;
+            _didIteratorError4 = true;
+            _iteratorError4 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                _iterator3.return();
+              if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                _iterator4.return();
               }
             } finally {
-              if (_didIteratorError3) {
-                throw _iteratorError3;
+              if (_didIteratorError4) {
+                throw _iteratorError4;
               }
             }
           }
@@ -1302,15 +1339,43 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
       toolbarCm.activate(Draw["POINT"]);
     },
     _changeValueCodLote: function _changeValueCodLote(evt) {
+      var selectedValue = evt.target.value;
+      var currentSelectId = evt.target.id;
       var id = evt.target.id.split('_')[1];
-      var idx = evt.target.selectedIndex;
-      var cod_lote = evt.target.options[idx].value;
+      // const idx = evt.target.selectedIndex
+      // const cod_lote = evt.target.value
       var lyr = selfCm.map.getLayer(idGraphicLabelCodLote);
       var graphicSelected = lyr.graphics.filter(function (item) {
         return item.attributes.id == 'label_' + id;
       });
-      graphicSelected[0].symbol.text = cod_lote;
-      lyr.refresh();
+      graphicSelected[0].symbol.text = selectedValue;
+      var selects = dojo.query('.codLoteSelectDvCls');
+      selects.forEach(function (select) {
+        if (select.id !== currentSelectId && select.value === selectedValue) {
+          select.value = '';
+          var graphicNotSelected = lyr.graphics.filter(function (item) {
+            return item.attributes.id == 'label_' + select.id.split('_')[1];
+          });
+          graphicNotSelected[0].symbol.text = '';
+        }
+        lyr.refresh();
+      });
+    },
+    _changeLotUrb: function _changeLotUrb(evt) {
+      var selectedValue = evt.target.value;
+      var currentSelectId = evt.target.id;
+      var selects = dojo.query('.loteUrbSelectDvCls');
+      var lyr = selfCm.map.getLayer(idGraphicLabelCodLote);
+      // const graphicSelected = lyr.graphics.filter(item => item.attributes.id == `label_${id}`)
+      selects.forEach(function (select) {
+        if (select.id !== currentSelectId && select.value === selectedValue) {
+          select.value = '';
+          var graphicNotSelected = lyr.graphics.filter(function (item) {
+            return item.attributes.id == 'label_' + select.id.split('_')[1];
+          });
+          graphicNotSelected[0].attributes.lot_urb = '';
+        }
+      });
     },
     _centerAtLabelCodLoteDivision: function _centerAtLabelCodLoteDivision(evt) {
       var id = evt.currentTarget.id;
@@ -1318,7 +1383,8 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
       var graphicSelected = lyr.graphics.filter(function (item) {
         return item.attributes.id == id;
       });
-      selfCm.map.centerAt(graphicSelected[0].geometry);
+      console.log(graphicSelected[0].geometry);
+      selfCm.map.centerAndZoom(graphicSelected[0].geometry);
     },
     _editLoteUrbanoDivision: function _editLoteUrbanoDivision(evt) {
       // let id = evt.currentTarget.id.replace('loteUrbanoDv_', '');
@@ -1348,6 +1414,11 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
         select.className = "codLoteSelectDvCls";
         select.id = 'codLoteSelectDv_' + predio.num;
 
+        var optionDisabled = document.createElement('option');
+        optionDisabled.value = '';
+        optionDisabled.textContent = '---';
+        optionDisabled.disabled = true;
+        select.appendChild(optionDisabled);
         predios.forEach(function (p) {
           var option = document.createElement('option');
           option.value = p.cod_lote;
@@ -1357,6 +1428,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
           }
           select.appendChild(option);
         });
+
         codigoCell.appendChild(select);
         row.appendChild(codigoCell);
 
@@ -1364,6 +1436,10 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
         var loteUrbSelect = document.createElement('select');
         loteUrbSelect.className = "loteUrbSelectDvCls";
         loteUrbSelect.id = 'loteUrbanoDv_' + predio.num;
+
+        var optionDisabledLotUrb = optionDisabled.cloneNode(true);
+        loteUrbSelect.appendChild(optionDisabledLotUrb);
+
         selfCm.responseRequests.forEach(function (request, idx) {
           var option = document.createElement('option');
           option.value = request.urbanLotNumber;
@@ -1387,6 +1463,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
         // dojo.query(`#${predio.id}`).on('click', selfCm._centerAtLabelCodLoteDivision)
       });
       dojo.query('.codLoteSelectDvCls').on('change', selfCm._changeValueCodLote);
+      dojo.query('.loteUrbSelectDvCls').on('change', selfCm._changeLotUrb);
       dojo.query('.locationLabelLoteDvCls').on('click', selfCm._centerAtLabelCodLoteDivision);
       dojo.query('.loteUrbanoDvCls').on('change', selfCm._editLoteUrbanoDivision);
     },
@@ -1501,9 +1578,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
         callbackParamName: "callback"
       };
 
-      esriRequest(requestOptions, {
-        usePost: true
-      }).then(function (response) {
+      esriRequest(requestOptions, { usePost: true }).then(function (response) {
         selfCm.currentLotsRows = response.features;
         selfCm.currentLotsRows.forEach(function (row) {
           row.geometry = new Polygon({
@@ -1512,35 +1587,35 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
           });
         });
         return deferred.resolve(selfCm.currentLotsRows);
-      }, function (error) {
-        deferred.reject(error);
+      }).catch(function (err) {
+        return deferred.reject(err);
       });
 
       return deferred.promise;
     },
     _getPolylinesDrawn: function _getPolylinesDrawn() {
       var arr = [];
-      var _iteratorNormalCompletion4 = true;
-      var _didIteratorError4 = false;
-      var _iteratorError4 = undefined;
+      var _iteratorNormalCompletion5 = true;
+      var _didIteratorError5 = false;
+      var _iteratorError5 = undefined;
 
       try {
-        for (var _iterator4 = graphicLayerLineaDivision.graphics[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-          var i = _step4.value;
+        for (var _iterator5 = graphicLayerLineaDivision.graphics[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+          var i = _step5.value;
 
           arr.push(i.geometry);
         }
       } catch (err) {
-        _didIteratorError4 = true;
-        _iteratorError4 = err;
+        _didIteratorError5 = true;
+        _iteratorError5 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion4 && _iterator4.return) {
-            _iterator4.return();
+          if (!_iteratorNormalCompletion5 && _iterator5.return) {
+            _iterator5.return();
           }
         } finally {
-          if (_didIteratorError4) {
-            throw _iteratorError4;
+          if (_didIteratorError5) {
+            throw _iteratorError5;
           }
         }
       }
@@ -1568,8 +1643,15 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
 
       if (geomLoteDivided.length == 0) {
         //  genera un mensage show indicando que no se encontro el lote
-        selfCm._showMessage(selfCm.nls.errorDivideLot, type = 'error');
-        return;
+        throw new Error(selfCm.nls.errorDivideLot);
+        // selfCm._showMessage(selfCm.nls.errorDivideLot, type = 'error');
+        // return;
+      }
+
+      if (geomLoteDivided.length != selfCm.responseRequests.length) {
+        throw new Error('No se puede proceder con la operaci\xF3n\nSe han generado m\xE1s lotes (' + geomLoteDivided.length + ') de los solicitados (' + selfCm.responseRequests.length + ')');
+        // selfCm._showMessage(`No se puede proceder con la operación\nSe han generado más lotes (${geomLoteDivided.length}) de los solicitados (${selfCm.responseRequests.length})`, type = 'error');
+        // return;
       }
 
       // Creamos grafico de lote fusionado
@@ -1578,13 +1660,13 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
       });
 
       // iterar sobre los graficos de la capa de division y agregar cada uno a graphicLayerLoteDivision
-      var _iteratorNormalCompletion5 = true;
-      var _didIteratorError5 = false;
-      var _iteratorError5 = undefined;
+      var _iteratorNormalCompletion6 = true;
+      var _didIteratorError6 = false;
+      var _iteratorError6 = undefined;
 
       try {
-        for (var _iterator5 = geomLoteDivided[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-          var i = _step5.value;
+        for (var _iterator6 = geomLoteDivided[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+          var i = _step6.value;
 
           var lote = new Graphic(i, symbolFusionLote);
 
@@ -1592,16 +1674,16 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
           graphicLayerLoteDivision.add(lote);
         }
       } catch (err) {
-        _didIteratorError5 = true;
-        _iteratorError5 = err;
+        _didIteratorError6 = true;
+        _iteratorError6 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion5 && _iterator5.return) {
-            _iterator5.return();
+          if (!_iteratorNormalCompletion6 && _iterator6.return) {
+            _iterator6.return();
           }
         } finally {
-          if (_didIteratorError5) {
-            throw _iteratorError5;
+          if (_didIteratorError6) {
+            throw _iteratorError6;
           }
         }
       }
@@ -1636,20 +1718,20 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
           return;
         }
         var frentes = {};
-        var _iteratorNormalCompletion6 = true;
-        var _didIteratorError6 = false;
-        var _iteratorError6 = undefined;
+        var _iteratorNormalCompletion7 = true;
+        var _didIteratorError7 = false;
+        var _iteratorError7 = undefined;
 
         try {
-          for (var _iterator6 = results.features[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-            var row = _step6.value;
-            var _iteratorNormalCompletion8 = true;
-            var _didIteratorError8 = false;
-            var _iteratorError8 = undefined;
+          for (var _iterator7 = results.features[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+            var row = _step7.value;
+            var _iteratorNormalCompletion9 = true;
+            var _didIteratorError9 = false;
+            var _iteratorError9 = undefined;
 
             try {
-              for (var _iterator8 = graphicLoteDivision.graphics[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
-                var graphic = _step8.value;
+              for (var _iterator9 = graphicLoteDivision.graphics[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+                var graphic = _step9.value;
 
                 var isItc = geometryEngine.intersects(row.geometry, graphic.geometry);
                 if (!isItc) {
@@ -1664,43 +1746,42 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
                 }
               }
             } catch (err) {
-              _didIteratorError8 = true;
-              _iteratorError8 = err;
+              _didIteratorError9 = true;
+              _iteratorError9 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion8 && _iterator8.return) {
-                  _iterator8.return();
+                if (!_iteratorNormalCompletion9 && _iterator9.return) {
+                  _iterator9.return();
                 }
               } finally {
-                if (_didIteratorError8) {
-                  throw _iteratorError8;
+                if (_didIteratorError9) {
+                  throw _iteratorError9;
                 }
               }
             }
           }
         } catch (err) {
-          _didIteratorError6 = true;
-          _iteratorError6 = err;
+          _didIteratorError7 = true;
+          _iteratorError7 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion6 && _iterator6.return) {
-              _iterator6.return();
+            if (!_iteratorNormalCompletion7 && _iterator7.return) {
+              _iterator7.return();
             }
           } finally {
-            if (_didIteratorError6) {
-              throw _iteratorError6;
+            if (_didIteratorError7) {
+              throw _iteratorError7;
             }
           }
         }
 
-        console.log(frentes);
-        var _iteratorNormalCompletion7 = true;
-        var _didIteratorError7 = false;
-        var _iteratorError7 = undefined;
+        var _iteratorNormalCompletion8 = true;
+        var _didIteratorError8 = false;
+        var _iteratorError8 = undefined;
 
         try {
-          for (var _iterator7 = graphicLoteDivision.graphics[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-            var lote = _step7.value;
+          for (var _iterator8 = graphicLoteDivision.graphics[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+            var lote = _step8.value;
 
             for (var idx in frentes) {
               var idItcFrentesByLotes = geometryEngine.intersects(lote.geometry, frentes[idx]);
@@ -1734,16 +1815,16 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
             }
           }
         } catch (err) {
-          _didIteratorError7 = true;
-          _iteratorError7 = err;
+          _didIteratorError8 = true;
+          _iteratorError8 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion7 && _iterator7.return) {
-              _iterator7.return();
+            if (!_iteratorNormalCompletion8 && _iterator8.return) {
+              _iterator8.return();
             }
           } finally {
-            if (_didIteratorError7) {
-              throw _iteratorError7;
+            if (_didIteratorError8) {
+              throw _iteratorError8;
             }
           }
         }
@@ -1752,7 +1833,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
         selfCm.map.addLayer(graphicLayerPuntoLote);
         selfCm._removeLayerGraphic(idGraphicPredioByDivison);
         selfCm.map.addLayer(graphicLayerPredioByDivison);
-        deferred.resolve();
+        return deferred.resolve();
       });
       return deferred.promise;
     },
@@ -1789,7 +1870,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
         selfCm._populateTablePredio(selfCm.bodyTbPrediosDvApCm, selfCm._activateToolPrediosByDivision);
         selfCm.busyIndicator.hide();
       }).catch(function (error) {
-        console.log(error);
+        // console.log(error)
         selfCm.busyIndicator.hide();
         selfCm._showMessage(error.message, type = "error");
       });
@@ -1869,6 +1950,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
           Acumulation.ubigeo = paramsApp['ubigeo'];
           Acumulation.user = paramsApp['username'];
           Acumulation.caseRequest = selfCm.case;
+          Acumulation.queryBlock = selfCm.arancel;
 
           Acumulation.executeAcumulation().then(function (response) {
             selfCm._removeLayerGraphic(idGraphicPredioCm);
@@ -1909,43 +1991,48 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
         return;
       }
 
-      if (graphicLayerPredioByDivison.graphics.length != layerLote.graphics.length) {
-        selfCm._showMessage("La solicitud no se puede realizar porque no se graficaron los predios resultantes", type = "error");
-        return;
-      }
-
       // Check if all labels have a value
       var labelCodLotesLayer = selfCm.map.getLayer(idGraphicLabelCodLote);
-      var _iteratorNormalCompletion9 = true;
-      var _didIteratorError9 = false;
-      var _iteratorError9 = undefined;
+      var _iteratorNormalCompletion10 = true;
+      var _didIteratorError10 = false;
+      var _iteratorError10 = undefined;
 
       try {
-        for (var _iterator9 = labelCodLotesLayer.graphics[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
-          var pred = _step9.value;
+        for (var _iterator10 = labelCodLotesLayer.graphics[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+          var pred = _step10.value;
 
+          if (!pred.symbol.text) {
+            selfCm._showMessage("Debe especificar los valores de Código de Lote", type = "error");
+            return;
+          }
           if (!pred.attributes.lot_urb || pred.attributes.lot_urb === "...") {
             selfCm._showMessage("Debe especificar los valores de Lote Urbano", type = "error");
             return;
           }
         }
 
-        // Check if all lots have a land
+        // check if lot urb exist
+        // const lotUrbExist = UtilityCase.checkLotUrbExist(labelCodLotesLayer.graphics)
       } catch (err) {
-        _didIteratorError9 = true;
-        _iteratorError9 = err;
+        _didIteratorError10 = true;
+        _iteratorError10 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion9 && _iterator9.return) {
-            _iterator9.return();
+          if (!_iteratorNormalCompletion10 && _iterator10.return) {
+            _iterator10.return();
           }
         } finally {
-          if (_didIteratorError9) {
-            throw _iteratorError9;
+          if (_didIteratorError10) {
+            throw _iteratorError10;
           }
         }
       }
 
+      if (graphicLayerPredioByDivison.graphics.length != layerLote.graphics.length) {
+        selfCm._showMessage("La solicitud no se puede realizar porque no se graficaron los predios resultantes", type = "error");
+        return;
+      }
+      // Check if all lots have a land
       var checkLotsWithinLands = UtilityCase.checkLotsWithinLands(layerLote.graphics, graphicLayerPredioByDivison.graphics);
       if (!checkLotsWithinLands) {
         selfCm._showMessage("La solicitud no se puede realizar porque uno de los lotes no tiene un predio resultante", type = "error");
@@ -1967,6 +2054,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
           SubDivision.currentLotsRows = selfCm.currentLotsRows;
           SubDivision.newPointLotsGraphics = selfCm.map.getLayer(idGraphicPuntoLote).graphics;
           SubDivision.newLandsGraphics = graphicLayerPredioByDivison.graphics;
+          SubDivision.queryBlock = selfCm.arancel;
           SubDivision.newLandsGraphics.forEach(function (i) {
             i['codPre'] = i.attributes.id.split("_")[2];
           });
@@ -2001,7 +2089,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
             selfCm._removeWarningMessageExecute();
             selfCm._showMessage("Proceso completado satisfactoriamente", type = "success");
           }).catch(function (error) {
-            console.log(error);
+            // console.log(error)
             selfCm._removeWarningMessageExecute();
             selfCm._showMessage(error, type = "error");
             selfCm.busyIndicator.hide();
@@ -2224,27 +2312,27 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
       });
     },
     _sendDataToPlatform: function _sendDataToPlatform(data) {
-      var _iteratorNormalCompletion10 = true;
-      var _didIteratorError10 = false;
-      var _iteratorError10 = undefined;
+      var _iteratorNormalCompletion11 = true;
+      var _didIteratorError11 = false;
+      var _iteratorError11 = undefined;
 
       try {
-        for (var _iterator10 = data.results[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
-          var predio = _step10.value;
+        for (var _iterator11 = data.results[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+          var predio = _step11.value;
 
           predio['ubigeo'] = paramsApp.ubigeo;
         }
       } catch (err) {
-        _didIteratorError10 = true;
-        _iteratorError10 = err;
+        _didIteratorError11 = true;
+        _iteratorError11 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion10 && _iterator10.return) {
-            _iterator10.return();
+          if (!_iteratorNormalCompletion11 && _iterator11.return) {
+            _iterator11.return();
           }
         } finally {
-          if (_didIteratorError10) {
-            throw _iteratorError10;
+          if (_didIteratorError11) {
+            throw _iteratorError11;
           }
         }
       }

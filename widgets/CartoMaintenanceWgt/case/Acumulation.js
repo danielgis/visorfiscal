@@ -35,11 +35,14 @@ define(["./UtilityCase"], function (UtilityCase) {
         // PointLotCls: new UtilityCase.PointLot(),
 
         // codUiValue: 1,
+        queryBlock: null, // @param
 
         executeAcumulation: function executeAcumulation() {
             var _this = this;
 
             return UtilityCase.getBlockFromLot(this.lotGraphic[0].geometry, this.blockUrl).then(function (block) {
+                return UtilityCase.checkExistLotUrban(_this.attributes, block, _this.lotUrl);
+            }).then(function (block) {
                 return UtilityCase.translateFieldsBlockToLot(_this.lotUrl, block, _this.lotGraphic);
             }).then(function (lots) {
                 var tipLot = UtilityCase.calculateTipLot(_this.currentLotsRows);
@@ -74,7 +77,7 @@ define(["./UtilityCase"], function (UtilityCase) {
             }).then(function (results) {
                 return console.log(results);
             }).catch(function (err) {
-                return console.log(err);
+                throw err;
             });
         }
     };
