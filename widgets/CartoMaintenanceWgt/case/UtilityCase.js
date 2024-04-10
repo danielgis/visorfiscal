@@ -51,12 +51,13 @@ define(["dojo/Deferred", "esri/tasks/QueryTask", "esri/tasks/query", "esri/tasks
             this.lotUrb = 'LOT_URB';
             this.ubigeo = 'UBIGEO';
             this.tipLot = 'TIP_LOT';
+            this.estadoIns = 'ESTADO_INS';
         },
         Arancel: function Arancel() {
             this.secEjec = 'SEC_EJEC';
         },
         receptionModelRequest: function receptionModelRequest() {
-            return ["COD_PRE", "COD_CPU", "COD_SECT", "COD_MZN", "COD_LOTE", "COD_UU", "COD_VIA", "TIPO_UU", "NOM_UU", "NOM_REF", "MZN_URB", "LOT_URB", "TIP_VIA", "NOM_VIA", "CUADRA", "LADO", "DIR_MUN", "DIR_URB", "COORD_X", "COORD_Y", "RAN_CPU", "COD_UI", "COD_VER"];
+            return ["COD_PRE", "COD_CPU", "COD_SECT", "COD_MZN", "COD_LOTE", "COD_UU", "COD_VIA", "TIPO_UU", "NOM_UU", "NOM_REF", "MZN_URB", "LOT_URB", "TIP_VIA", "NOM_VIA", "CUADRA", "LADO", "DIR_MUN", "DIR_URB", "COORD_X", "COORD_Y", "RAN_CPU", "COD_UI", "COD_VER", "ID"];
         },
         matchWithReceptionModel: function matchWithReceptionModel(object) {
             var modelRequests = this.receptionModelRequest();
@@ -256,7 +257,6 @@ define(["dojo/Deferred", "esri/tasks/QueryTask", "esri/tasks/query", "esri/tasks
         calculateFieldsOfLot: function calculateFieldsOfLot(lotUrl, lots, ubigeo, codRequests, user, attributes, tipLot) {
             var _this2 = this;
 
-            // console.log(attributes)
             var deferred = new Deferred();
             var LotCls = new this.Lot();
 
@@ -290,6 +290,7 @@ define(["dojo/Deferred", "esri/tasks/QueryTask", "esri/tasks/query", "esri/tasks
                     lot.attributes[LotCls.codLot] = attributes[idx].codLot;
                     lot.attributes[LotCls.lotUrb] = attributes[idx].lotUrb;
                     lot.attributes[LotCls.tipLot] = tipLot;
+                    lot.attributes[LotCls.estadoIns] = _this2.estadoInsValue;
                 });
                 return deferred.resolve(lots);
             }).catch(function (err) {
@@ -472,6 +473,7 @@ define(["dojo/Deferred", "esri/tasks/QueryTask", "esri/tasks/query", "esri/tasks
                             landProps.attributes[LandCls.dirMun] = _this6.generateDirMun(landProps.attributes[LandCls.tipVia], landProps.attributes[LandCls.nomVia], landProps.attributes[LandCls.numMun]);
                             landProps.attributes[LandCls.dirUrb] = _this6.generateDirUrb(landProps.attributes[LandCls.tipVia], landProps.attributes[LandCls.nomVia], landProps.attributes[LandCls.numMun]);
                             landProps.geometry = landGraphic.geometry;
+                            landProps.attributes['ID'] = parseInt(landGraphic.id);
                             lands.push(landProps.clone());
                             break;
                         }
@@ -550,6 +552,36 @@ define(["dojo/Deferred", "esri/tasks/QueryTask", "esri/tasks/query", "esri/tasks
             queryLandsOrigin.units = "meters";
             return queryLandsOriginTask.execute(queryLandsOrigin);
         },
+        getLandsOriginByQuery: function getLandsOriginByQuery(landUrl, cpu) {
+            var deferred = new Deferred();
+            var LandCls = new this.Land();
+
+            var queryLandsOriginTask = new QueryTask(landUrl);
+            var queryLandsOrigin = new Query();
+            queryLandsOrigin.returnGeometry = true;
+            queryLandsOrigin.outFields = ["*"];
+            queryLandsOrigin.where = LandCls.codCpu + " = '" + cpu + "'";
+            queryLandsOriginTask.execute(queryLandsOrigin).then(function (result) {
+                return deferred.resolve(result);
+            }).catch(function (err) {
+                return deferred.reject(err);
+            });
+            return deferred.promise;
+        },
+        updateRowsGeneric: function updateRowsGeneric(features, codRequest, user) {
+            var _this7 = this;
+
+            var LandCls = new this.Land();
+            var LotCls = new this.Lot();
+            features.forEach(function (feature) {
+                feature.attributes[LandCls.estado] = 0;
+                feature.attributes[LotCls.fuente] = codRequest;
+                feature.attributes[LotCls.nomUser] = user;
+                feature.attributes[LotCls.nomPc] = _this7.platformUpdate;
+                feature.attributes[LotCls.anoCart] = new Date().getFullYear();
+            });
+            return features;
+        },
         getDataOrigin: function getDataOrigin(pointLotUrl, landUrl, lots) {
             // const self = this;
             var deferred = new Deferred();
@@ -600,10 +632,28 @@ define(["dojo/Deferred", "esri/tasks/QueryTask", "esri/tasks/query", "esri/tasks
         },
         sendDataOriginToHistoric: function sendDataOriginToHistoric(config, currentLotsRows, currentPoinLotsRows, currentLandsRows) {
             var deferred = new Deferred();
-            var lotsHistoricRequestOptions = this.setParametersToAddFeatures(config.lotHistoricUrl, currentLotsRows);
-            var pointsLotsHistoricRequestOptions = this.setParametersToAddFeatures(config.pointLotHistoricUrl, currentPoinLotsRows);
-            var landsHistoricRequestOptions = this.setParametersToAddFeatures(config.landHistoricUrl, currentLandsRows);
-            var promises = [esriRequest(lotsHistoricRequestOptions, { usePost: true }), esriRequest(pointsLotsHistoricRequestOptions, { usePost: true }), esriRequest(landsHistoricRequestOptions, { usePost: true })];
+            var promises = [];
+
+            if (currentLotsRows) {
+                var lotsHistoricRequestOptions = this.setParametersToAddFeatures(config.lotHistoricUrl, currentLotsRows);
+                promises.push(esriRequest(lotsHistoricRequestOptions, { usePost: true }));
+            }
+
+            if (currentPoinLotsRows) {
+                var pointsLotsHistoricRequestOptions = this.setParametersToAddFeatures(config.pointLotHistoricUrl, currentPoinLotsRows);
+                promises.push(esriRequest(pointsLotsHistoricRequestOptions, { usePost: true }));
+            }
+
+            if (currentLandsRows) {
+                var landsHistoricRequestOptions = this.setParametersToAddFeatures(config.landHistoricUrl, currentLandsRows);
+                promises.push(esriRequest(landsHistoricRequestOptions, { usePost: true }));
+            }
+
+            // const promises = [
+            //     esriRequest(lotsHistoricRequestOptions, { usePost: true }),
+            //     esriRequest(pointsLotsHistoricRequestOptions, { usePost: true }),
+            //     esriRequest(landsHistoricRequestOptions, { usePost: true })
+            // ]
 
             all(promises).then(function (results) {
                 return deferred.resolve(results);
@@ -638,6 +688,17 @@ define(["dojo/Deferred", "esri/tasks/QueryTask", "esri/tasks/query", "esri/tasks
             });
             return deferred.promise;
         },
+        updateDataDeactivate: function updateDataDeactivate(lands, config) {
+            var deferred = new Deferred();
+            var deactivateFeatures = this.setParametersToUpdateFeatures(config.landUrl, lands);
+
+            esriRequest(deactivateFeatures, { usePost: true }).then(function (result) {
+                return deferred.resolve(result);
+            }).catch(function (err) {
+                return deferred.reject(err);
+            });
+            return deferred.promise;
+        },
         addDataNew: function addDataNew(lots, pointLots, lands, config) {
             var deferred = new Deferred();
 
@@ -665,6 +726,7 @@ define(["dojo/Deferred", "esri/tasks/QueryTask", "esri/tasks/query", "esri/tasks
         updateStatusRequests: function updateStatusRequests(lands, codRequests, caseRequest, ubigeo, config) {
             var deferred = new Deferred();
             var responseLands = UtilityCase.matchWithReceptionModel(lands);
+
             var response = {
                 id: codRequests,
                 results: responseLands,

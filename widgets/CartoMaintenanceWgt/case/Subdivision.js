@@ -71,8 +71,6 @@ define(["./UtilityCase"], function (UtilityCase) {
                 return UtilityCase.addDataNew(_this.lots, _this.pointLots, _this.lands, _this.config);
             }).then(function (results) {
                 return UtilityCase.updateStatusRequests(_this.lands, _this.codRequests, _this.caseRequest, _this.ubigeo, _this.config);
-            }).then(function (results) {
-                return console.log(results);
             }).catch(function (err) {
                 throw err;
             });

@@ -83,22 +83,26 @@ define(["esri/graphic", "esri/geometry/Circle", "esri/geometry/Point"], function
         selectedPointLots: function selectedPointLots(evt) {
             var pointLotSelection = evt.target;
             var pointLotSelectionRow = pointLotSelection.parentNode.parentNode;
+            // id of land selected
             var landId = pointLotSelectionRow.dataset.id;
+            var landCpm = pointLotSelectionRow.dataset.cpm;
             this.removeGraphic(landId);
+            // id of point lot selected
             var pointLotId = pointLotSelection.selectedOptions[0].dataset.id;
+            // search point lot selected
             var pointLot = this.pointLots.find(function (pointLot) {
                 return pointLot.attributes.ID_LOTE === pointLotId;
             });
-
+            // add point lot to land
             this.lands.forEach(function (land) {
-                if (land.cpm === landId) {
+                if (land.id === parseInt(landId)) {
                     land.pointLot = pointLot;
                 }
             });
 
             var buffer = new Circle({
                 center: pointLot.geometry,
-                radius: 1,
+                radius: 0.5,
                 geodesic: true,
                 radiusUnit: esri.Units.METERS
             });
@@ -152,7 +156,7 @@ define(["esri/graphic", "esri/geometry/Circle", "esri/geometry/Point"], function
             });
 
             var landsHtml = this.lands.map(function (land, idx) {
-                return "<tr data-id=" + land.cpm + ">\n                            <td>" + (idx + 1) + "</td>\n                            <td>" + land.cpm + "</td>\n                            <td>" + land.address + "</td>\n                            <td>\n                                <select class=\"pointLotSelectionCm\">\n                                    <option value=\"\" disabled selected>\n                                        ---\n                                    </option>\n                                    " + pointLotsHtml.join('') + "\n                                </select>\n                            </td>\n                        </tr>";
+                return "<tr data-id=" + land.id + " data-cpm=" + land.cpm + ">\n                            <td>" + (idx + 1) + "</td>\n                            <td>" + land.cpm + "</td>\n                            <td>" + land.address + "</td>\n                            <td>\n                                <select class=\"pointLotSelectionCm\">\n                                    <option value=\"\" disabled selected>\n                                        ---\n                                    </option>\n                                    " + pointLotsHtml.join('') + "\n                                </select>\n                            </td>\n                        </tr>";
             });
 
             var renderString = "<div class=\"ctnParamsCm\">\n                        <div class=\"lblParamCm\">\n                            <span class=\"alignVCenter\">\n                                Graficar predios resultantes de la " + this.title + "\n                            </span>\n                        </div>\n                    </div>\n                    <div class=\"ctnParamsCm ctnTablesClsCm\">\n                        <table id=\"tableLandsResults\" class=\"tableClsCm\">\n                            <thead>\n                                <tr>\n                                    <th class=\"center-aligned\">Nro</th>\n                                    <th>Cod. Predio<br>Municipal</th>\n                                    <th>Direcci\xF3n</th>\n                                    <th class=\"center-aligned\">V\xEDa</th>\n                                </tr>\n                            </thead>\n                            <tbody>\n                                " + landsHtml.join('') + "\n                            </tbody>\n                        </table>\n                    </div>";
