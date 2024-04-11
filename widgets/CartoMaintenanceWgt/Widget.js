@@ -660,6 +660,9 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
             responseResults = _ref2[1],
             responseDocSupport = _ref2[2];
 
+        console.log(selfCm.currentLandTabRows);
+        console.log(responseResults);
+        console.log(responseDocSupport);
         var rows = selfCm.currentLandTabRows.map(function (i, idx) {
           return CaseInfo.contentCard(i, 'original', i.cup, active = selfCm.case != 2 ? true : false);
         });
@@ -678,7 +681,9 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
 
         if (selfCm.case != 4) {
           var rowsResults = responseResults.results.map(function (i, idx) {
-            return CaseInfo.contentCard(i, 'result', idx + 1);
+            // const otherAttributes = selfCm.case === "5" ? true : false;
+            // console.log(otherAttributes, '.....')
+            return CaseInfo.contentCard(i, 'result', idx + 1, false, true);
           });
           dojo.query('.CtnResultClsCm')[0].innerHTML = rowsResults.join('');
           dojo.query('.lblResultsClsCm').addClass('active');
@@ -740,6 +745,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
         selfCm.busyIndicator.hide();
       }).catch(function (error) {
         selfCm.busyIndicator.hide();
+        selfCm._showMessage(error.message, type = "error");
         console.log(error);
       });
     },

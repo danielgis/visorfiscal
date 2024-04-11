@@ -770,3 +770,15 @@ input[type='file'] {
 .lblResultsClsCm.active {
   display: block;
 }
+
+
+.otherAttributtesCtnClsCm {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.attributteCtnClsCm {
+  width: 48%;
+}
