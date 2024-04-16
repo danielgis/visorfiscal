@@ -13,6 +13,7 @@ define(["./UtilityCase"], function (UtilityCase) {
         cpu: null, // @param
         // currentLotsRows: null, //@param
         currentLandsRows: null,
+        currentLotsRows: null,
 
         executeDeactivate: function executeDeactivate() {
             var self = this;
@@ -22,6 +23,12 @@ define(["./UtilityCase"], function (UtilityCase) {
             }).then(function (results) {
                 self.currentLandsRows = UtilityCase.updateRowsGeneric(self.currentLandsRows, self.codRequest, self.user);
                 return UtilityCase.updateDataDeactivate(self.currentLandsRows, self.config);
+            }).then(function (results) {
+                return UtilityCase.checkLandsWithinLot(self.currentLotsRows[0], self.landUrl);
+            }).then(function (results) {
+                var lot = new UtilityCase.Lot();
+                self.currentLotsRows[0].attributes[lot.estadoIns] = results;
+                return UtilityCase.updateDataLotsDeactivate(self.currentLotsRows, self.config);
             }).then(function (results) {
                 return UtilityCase.updateStatusRequests(self.currentLandsRows, self.codRequest, self.caseRequest, self.ubigeo, self.config);
             }).catch(function (err) {

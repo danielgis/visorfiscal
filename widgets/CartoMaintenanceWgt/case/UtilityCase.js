@@ -699,6 +699,17 @@ define(["dojo/Deferred", "esri/tasks/QueryTask", "esri/tasks/query", "esri/tasks
             });
             return deferred.promise;
         },
+        updateDataLotsDeactivate: function updateDataLotsDeactivate(lots, config) {
+            var deferred = new Deferred();
+            var updateLotFeature = this.setParametersToUpdateFeatures(config.lotUrl, lots);
+
+            esriRequest(updateLotFeature, { usePost: true }).then(function (result) {
+                return deferred.resolve(result);
+            }).catch(function (err) {
+                return deferred.reject(err);
+            });
+            return deferred.promise;
+        },
         addDataNew: function addDataNew(lots, pointLots, lands, config) {
             var deferred = new Deferred();
 
@@ -829,6 +840,23 @@ define(["dojo/Deferred", "esri/tasks/QueryTask", "esri/tasks/query", "esri/tasks
             }
 
             return true;
+        },
+        checkLandsWithinLot: function checkLandsWithinLot(lot, urlLands) {
+            var deferred = new Deferred();
+            var landCls = new this.Land();
+            var queryLands = new Query();
+            queryLands.geometry = lot.geometry;
+            queryLands.distance = 0.5;
+            queryLands.units = "meters";
+            queryLands.where = landCls.estado + " = 1 ";
+            var queryTaskLands = new QueryTask(urlLands);
+            queryTaskLands.execute(queryLands).then(function (response) {
+                var result = response.features.length > 0 ? 1 : 0;
+                return deferred.resolve(result);
+            }).catch(function (err) {
+                return deferred.reject(err);
+            });
+            return deferred.promise;
         }
     };
 
