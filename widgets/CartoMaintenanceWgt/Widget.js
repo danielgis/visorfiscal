@@ -459,10 +459,10 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
       var LotCls = new UtilityCase.Lot();
       var queryLands = new Query();
       // @cpu
-      var codPreOriginal = self.currentLandTabRows.map(function (i) {
-        return i.cpm;
+      var cpuOriginal = self.currentLandTabRows.map(function (i) {
+        return i.cup;
       });
-      queryLands.where = UtilityCase.ubigeoFieldName + ' = \'' + paramsApp['ubigeo'] + '\' and ' + LandCls.codPre + ' in (\'' + codPreOriginal.join("', '") + '\')';
+      queryLands.where = UtilityCase.ubigeoFieldName + ' = \'' + paramsApp['ubigeo'] + '\' and ' + LandCls.codCpu + ' in (\'' + cpuOriginal.join("', '") + '\')';
       queryLands.returnGeometry = true;
       queryLands.outFields = ["*"];
       var urlLands = self.layersMap.getLayerInfoById(idLyrCfPredios).getUrl();
