@@ -1004,6 +1004,8 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
       return union;
     },
     _unionFeaturesAcumulation: function _unionFeaturesAcumulation() {
+      var topology = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
       // Creamos grafico de lote fusionado
       var graphicLayerLoteFusion = new GraphicsLayer({
         id: idGraphicLoteCm
@@ -1017,6 +1019,11 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
       //   arr.push(i.geometry)
       // }
       var response = selfCm._unionFeatures(arr);
+      if (topology) {
+        if (response.rings.length > 1) {
+          throw new Error("La acumulación no es posible (los predios no son contiguos)");
+        }
+      }
       var graphic = new Graphic(response, symbolFusionLote);
 
       graphicLayerLoteFusion.add(graphic);
@@ -1040,7 +1047,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
       }
 
       return selfCm._getOriginalLots(selfCm.lotesQuery).then(function (originLots) {
-        var geomLoteAcumulation = selfCm._unionFeaturesAcumulation();
+        var geomLoteAcumulation = selfCm._unionFeaturesAcumulation(topology = true);
         return selfCm._getMaxCodLot(geomLoteAcumulation);
       }).then(function (proprsLot) {
         selfCm._ordenarPoligonosNorteSur(proprsLot.polygons, parseInt(proprsLot.maxCodLote), selfCm.bodyTbDatosLoteFsApCm);
