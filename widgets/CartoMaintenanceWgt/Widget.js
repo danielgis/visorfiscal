@@ -660,9 +660,6 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
             responseResults = _ref2[1],
             responseDocSupport = _ref2[2];
 
-        console.log(selfCm.currentLandTabRows);
-        console.log(responseResults);
-        console.log(responseDocSupport);
         var rows = selfCm.currentLandTabRows.map(function (i, idx) {
           return CaseInfo.contentCard(i, 'original', i.cup, active = selfCm.case != 2 ? true : false);
         });
@@ -809,7 +806,6 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
     _FormResult: function _FormResult(id_solicitud, caseCm) {
       var urlPredioResults = selfCm.config.resultsByApplication + '/' + id_solicitud;
       selfCm._callApiRestServices(urlPredioResults, {}).then(function (response) {
-        console.log(response);
         try {
           selfCm.bodyTbResultsApCm.innerHTML = '';
           dojo.query("#titleCaseResult")[0].innerHTML = '<span>Solicitud ' + id_solicitud + ': ' + caseCm + '</span>';
@@ -916,7 +912,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
     _activateToolAcumulacion: function _activateToolAcumulacion(evt) {
       selfCm._removeClassActiveButton();
       selfCm.idButtonDrawActive = evt.currentTarget.id;
-      selfCm.cpmAcumulacion = evt.currentTarget.dataset.cpm;
+      selfCm.cpmAcumulacion = evt.currentTarget.dataset.cpm === 'null' ? null : evt.currentTarget.dataset.cpm;
       selfCm.idAcumulacion = evt.currentTarget.parentElement.parentElement.id.split('_')[1];
       dojo.query('#' + selfCm.idButtonDrawActive)[0].classList.add('activeButton');
       selfCm.map.setInfoWindowOnClick(false);
@@ -1250,7 +1246,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
       selfCm.idButtonDrawActive = evt.currentTarget.id;
       dojo.query('#' + selfCm.idButtonDrawActive)[0].classList.add('activeButton');
       // const id = evt.currentTarget.id
-      selfCm.cpmPredioDivision = evt.currentTarget.dataset.cpm;
+      selfCm.cpmPredioDivision = evt.currentTarget.dataset.cpm === 'null' ? null : evt.currentTarget.dataset.cpm;
       selfCm.idPredioDivision = evt.currentTarget.parentElement.parentElement.id;
       // console.log(selfCm.idPredioDivision);
       var graphic = graphicLayerPredioByDivison.graphics.filter(function (item) {
@@ -1307,7 +1303,6 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
       var graphicSelected = lyr.graphics.filter(function (item) {
         return item.attributes.id == id;
       });
-      console.log(graphicSelected[0].geometry);
       selfCm.map.centerAndZoom(graphicSelected[0].geometry);
     },
     _editLoteUrbanoDivision: function _editLoteUrbanoDivision(evt) {
@@ -1712,7 +1707,6 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
                 continue;
               }
               var itcFrentesByLotes = geometryEngine.intersect(frentes[idx], lote.geometry);
-              console.log(itcFrentesByLotes);
               var _iteratorNormalCompletion9 = true;
               var _didIteratorError9 = false;
               var _iteratorError9 = undefined;
@@ -2257,11 +2251,6 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dijit/_WidgetsInTemplateMixin'
       selfCm.busyIndicator.hide();
       // remove 'loadingTextCustom'
       dojo.query("#loadingTextCustom")[0].remove();
-    },
-    _cancelProcess: function _cancelProcess(evt) {
-      selfCm.gp.cancelJob(selfCm.jobId, function (info) {
-        console.log(info.jobStatus);
-      });
     },
     _exportTableToExcel: function _exportTableToExcel(evt) {
       // Obtén la tabla HTML
